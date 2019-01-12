@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p><strong>user 테이블 select 테스트</strong></p>
+    {% for post in posts %}
+    <div>
+        <p>userId: {{ post.id }}</p>
+        <p>userName: {{ post.name }}</p>
+        <p>nickname: {{ post.nickname }}</p>
+        <p>password: {{ post.password }}</p>
+        <p>email: {{ post.email }}</p>
+        <p>university: {{ post.university }}</p>
+        <p>isCertified: {{ post.isCertified }}</p>
+        <p>dueDate: {{ post.dueDate }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>
