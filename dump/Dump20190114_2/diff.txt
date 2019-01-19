@@ -1,8 +1,0 @@
-= changed 3 table name =
-
-1. tt & timetable are changed each other
-tt -> timetable
-timetable -> tcir(timetable & course intersection relation)
-
-2. "like" is a reserved word in mysql
-like -> likeit
