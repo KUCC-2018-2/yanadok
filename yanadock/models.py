@@ -22,16 +22,6 @@ class Course(models.Model):
         db_table = 'course'
 
 
-class Likey(models.Model):
-    userid = models.ForeignKey('user.User', models.DO_NOTHING, db_column='userid', primary_key=True)
-    postid = models.ForeignKey('Post', models.DO_NOTHING, db_column='postid')
-
-    class Meta:
-        managed = False
-        db_table = 'likey'
-        unique_together = (('userid', 'postid'),)
-
-
 class Post(models.Model):
     postid = models.AutoField(primary_key=True)
     userid = models.ForeignKey('user.User', models.DO_NOTHING, db_column='userid', blank=True, null=True)
@@ -45,6 +35,16 @@ class Post(models.Model):
     class Meta:
         managed = False
         db_table = 'post'
+
+
+class PostLike(models.Model):
+    userid = models.ForeignKey('user.User', models.DO_NOTHING, db_column='userid', primary_key=True)
+    postid = models.ForeignKey(Post, models.DO_NOTHING, db_column='postid')
+
+    class Meta:
+        managed = False
+        db_table = 'post_like'
+        unique_together = (('userid', 'postid'),)
 
 
 class TimeTable(models.Model):

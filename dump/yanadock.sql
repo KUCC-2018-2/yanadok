@@ -82,7 +82,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE `auth_permission` (
 
 LOCK TABLES `auth_permission` WRITE;
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
-INSERT INTO `auth_permission` VALUES (1,'Can add user',1,'add_user'),(2,'Can change user',1,'change_user'),(3,'Can delete user',1,'delete_user'),(4,'Can view user',1,'view_user'),(5,'Can add log entry',2,'add_logentry'),(6,'Can change log entry',2,'change_logentry'),(7,'Can delete log entry',2,'delete_logentry'),(8,'Can view log entry',2,'view_logentry'),(9,'Can add permission',3,'add_permission'),(10,'Can change permission',3,'change_permission'),(11,'Can delete permission',3,'delete_permission'),(12,'Can view permission',3,'view_permission'),(13,'Can add group',4,'add_group'),(14,'Can change group',4,'change_group'),(15,'Can delete group',4,'delete_group'),(16,'Can view group',4,'view_group'),(17,'Can add content type',5,'add_contenttype'),(18,'Can change content type',5,'change_contenttype'),(19,'Can delete content type',5,'delete_contenttype'),(20,'Can view content type',5,'view_contenttype'),(21,'Can add session',6,'add_session'),(22,'Can change session',6,'change_session'),(23,'Can delete session',6,'delete_session'),(24,'Can view session',6,'view_session');
+INSERT INTO `auth_permission` VALUES (1,'Can add user',1,'add_user'),(2,'Can change user',1,'change_user'),(3,'Can delete user',1,'delete_user'),(4,'Can view user',1,'view_user'),(5,'Can add log entry',2,'add_logentry'),(6,'Can change log entry',2,'change_logentry'),(7,'Can delete log entry',2,'delete_logentry'),(8,'Can view log entry',2,'view_logentry'),(9,'Can add permission',3,'add_permission'),(10,'Can change permission',3,'change_permission'),(11,'Can delete permission',3,'delete_permission'),(12,'Can view permission',3,'view_permission'),(13,'Can add group',4,'add_group'),(14,'Can change group',4,'change_group'),(15,'Can delete group',4,'delete_group'),(16,'Can view group',4,'view_group'),(17,'Can add content type',5,'add_contenttype'),(18,'Can change content type',5,'change_contenttype'),(19,'Can delete content type',5,'delete_contenttype'),(20,'Can view content type',5,'view_contenttype'),(21,'Can add session',6,'add_session'),(22,'Can change session',6,'change_session'),(23,'Can delete session',6,'delete_session'),(24,'Can view session',6,'view_session'),(25,'Can add course',7,'add_course'),(26,'Can change course',7,'change_course'),(27,'Can delete course',7,'delete_course'),(28,'Can view course',7,'view_course'),(29,'Can add post',8,'add_post'),(30,'Can change post',8,'change_post'),(31,'Can delete post',8,'delete_post'),(32,'Can view post',8,'view_post'),(33,'Can add time table',9,'add_timetable'),(34,'Can change time table',9,'change_timetable'),(35,'Can delete time table',9,'delete_timetable'),(36,'Can view time table',9,'view_timetable'),(37,'Can add likey',10,'add_likey'),(38,'Can change likey',10,'change_likey'),(39,'Can delete likey',10,'delete_likey'),(40,'Can view likey',10,'view_likey'),(41,'Can add post like',11,'add_postlike'),(42,'Can change post like',11,'change_postlike'),(43,'Can delete post like',11,'delete_postlike'),(44,'Can view post like',11,'view_postlike');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +169,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,7 +178,7 @@ CREATE TABLE `django_content_type` (
 
 LOCK TABLES `django_content_type` WRITE;
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
-INSERT INTO `django_content_type` VALUES (2,'admin','logentry'),(4,'auth','group'),(3,'auth','permission'),(5,'contenttypes','contenttype'),(6,'sessions','session'),(1,'user','user');
+INSERT INTO `django_content_type` VALUES (2,'admin','logentry'),(4,'auth','group'),(3,'auth','permission'),(5,'contenttypes','contenttype'),(6,'sessions','session'),(1,'user','user'),(7,'yanadock','course'),(10,'yanadock','likey'),(8,'yanadock','post'),(11,'yanadock','postlike'),(9,'yanadock','timetable');
 /*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,7 +195,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +204,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2019-01-20 17:48:20.934977'),(2,'contenttypes','0002_remove_content_type_name','2019-01-20 17:48:21.148746'),(3,'auth','0001_initial','2019-01-20 17:48:21.814804'),(4,'auth','0002_alter_permission_name_max_length','2019-01-20 17:48:21.948721'),(5,'auth','0003_alter_user_email_max_length','2019-01-20 17:48:21.964838'),(6,'auth','0004_alter_user_username_opts','2019-01-20 17:48:21.985003'),(7,'auth','0005_alter_user_last_login_null','2019-01-20 17:48:22.005121'),(8,'auth','0006_require_contenttypes_0002','2019-01-20 17:48:22.015198'),(9,'auth','0007_alter_validators_add_error_messages','2019-01-20 17:48:22.055051'),(10,'auth','0008_alter_user_username_max_length','2019-01-20 17:48:22.068944'),(11,'auth','0009_alter_user_last_name_max_length','2019-01-20 17:48:22.088575'),(12,'user','0001_initial','2019-01-20 17:48:22.948814'),(13,'admin','0001_initial','2019-01-20 17:48:23.286428'),(14,'admin','0002_logentry_remove_auto_add','2019-01-20 17:48:23.307037'),(15,'admin','0003_logentry_add_action_flag_choices','2019-01-20 17:48:23.338545'),(16,'sessions','0001_initial','2019-01-20 17:48:23.428493');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2019-01-20 17:48:20.934977'),(2,'contenttypes','0002_remove_content_type_name','2019-01-20 17:48:21.148746'),(3,'auth','0001_initial','2019-01-20 17:48:21.814804'),(4,'auth','0002_alter_permission_name_max_length','2019-01-20 17:48:21.948721'),(5,'auth','0003_alter_user_email_max_length','2019-01-20 17:48:21.964838'),(6,'auth','0004_alter_user_username_opts','2019-01-20 17:48:21.985003'),(7,'auth','0005_alter_user_last_login_null','2019-01-20 17:48:22.005121'),(8,'auth','0006_require_contenttypes_0002','2019-01-20 17:48:22.015198'),(9,'auth','0007_alter_validators_add_error_messages','2019-01-20 17:48:22.055051'),(10,'auth','0008_alter_user_username_max_length','2019-01-20 17:48:22.068944'),(11,'auth','0009_alter_user_last_name_max_length','2019-01-20 17:48:22.088575'),(12,'user','0001_initial','2019-01-20 17:48:22.948814'),(13,'admin','0001_initial','2019-01-20 17:48:23.286428'),(14,'admin','0002_logentry_remove_auto_add','2019-01-20 17:48:23.307037'),(15,'admin','0003_logentry_add_action_flag_choices','2019-01-20 17:48:23.338545'),(16,'sessions','0001_initial','2019-01-20 17:48:23.428493'),(17,'yanadock','0001_initial','2019-01-20 18:03:33.592532');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,32 +231,6 @@ CREATE TABLE `django_session` (
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `likey`
---
-
-DROP TABLE IF EXISTS `likey`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `likey` (
-  `userid` int(11) NOT NULL,
-  `postid` int(11) NOT NULL,
-  PRIMARY KEY (`userid`,`postid`),
-  KEY `postid` (`postid`),
-  CONSTRAINT `likey_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`),
-  CONSTRAINT `likey_ibfk_2` FOREIGN KEY (`postid`) REFERENCES `post` (`postid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `likey`
---
-
-LOCK TABLES `likey` WRITE;
-/*!40000 ALTER TABLE `likey` DISABLE KEYS */;
-/*!40000 ALTER TABLE `likey` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -290,6 +264,32 @@ CREATE TABLE `post` (
 LOCK TABLES `post` WRITE;
 /*!40000 ALTER TABLE `post` DISABLE KEYS */;
 /*!40000 ALTER TABLE `post` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `post_like`
+--
+
+DROP TABLE IF EXISTS `post_like`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `post_like` (
+  `userid` int(11) NOT NULL,
+  `postid` int(11) NOT NULL,
+  PRIMARY KEY (`userid`,`postid`),
+  KEY `postid` (`postid`),
+  CONSTRAINT `post_like_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`),
+  CONSTRAINT `post_like_ibfk_2` FOREIGN KEY (`postid`) REFERENCES `post` (`postid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `post_like`
+--
+
+LOCK TABLES `post_like` WRITE;
+/*!40000 ALTER TABLE `post_like` DISABLE KEYS */;
+/*!40000 ALTER TABLE `post_like` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -343,7 +343,7 @@ CREATE TABLE `user` (
   `due_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,6 +352,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'pbkdf2_sha256$120000$YIUI8F4YlLR4$e3iiHqJmdg2Qiqhec5oUUOi7rOvuJruyk95UlJ0WUUU=','2019-01-20 19:57:36.835362',1,'jack','','','',1,1,'2019-01-20 18:22:08.147504',NULL,'KoreaUniv',0,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -420,4 +421,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-20 17:55:00
+-- Dump completed on 2019-01-20 22:29:18
