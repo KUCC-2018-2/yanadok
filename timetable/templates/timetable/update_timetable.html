@@ -1,0 +1,321 @@
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>update_timetable</title>
+    {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'timetable/update_timetable.css' %}?after">
+  </head>
+  <body>
+  {% load filters %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var search_type = 'null';
+      var key_word;
+      var index ;
+
+      $(document).on('click', '#course_id', function(){
+        search_type = 'course_id';
+      });
+
+      $(document).on('click', '#course_name', function(){
+        search_type = 'course_name';
+      });
+
+      $(document).on('click', '#professor', function(){
+        search_type = 'professor';
+      });
+
+
+      $(document).on('click', '#search', function(){
+        key_word = $("#search_input").val().toUpperCase();
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'st': search_type, 'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'kw': key_word},
+
+            success: function(response) {
+              $dom = $(document.createElement("html"));
+              $dom[0].innerHTML = response;
+              $body = $dom.find("#search_result_table")[0];
+
+              $curDom = $('html');
+              $div = $curDom.find("#search_result_table")[0];
+
+              $($div).html($body);
+            }
+         })
+    })
+
+
+    $(document).on('click', '.select', function(){
+        var index = $('html').find(".select").index(this);
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'st': search_type, 'index': index, 'kw': key_word,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',},
+
+            success: function(response) {
+
+              $dom = $(document.createElement("html"));
+              $dom[0].innerHTML = response;
+
+              $wrapper = $dom.find("#update_timetable_wrapper")[0];
+
+              $curDom = $('html');
+              $container = $curDom.find("#update_timetable_container")[0];
+
+              $($container).html($wrapper);
+
+            }
+         })
+    })
+
+
+    $(document).on('click', '.delete', function(){
+
+        var rindex = $('html').find(".delete").index(this);
+
+        console.log("index" + index);
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'st': search_type, 'rindex': rindex, 'kw': key_word,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',},
+
+            success: function(response) {
+
+              $dom = $(document.createElement("html"));
+              $dom[0].innerHTML = response;
+              $wrapper = $dom.find("#update_timetable_wrapper")[0];
+
+              $curDom = $('html');
+              $container = $curDom.find("#update_timetable_container")[0];
+
+              $($container).html($wrapper);
+
+            }
+        })
+    })
+  });
+  </script>
+
+    <div id="nav">
+      <div class="wrap">
+        <div id="logo">
+          <p>  logo </p>
+        </div>
+        <div id="logout">
+          <a href="#" id="logout_btn">logout</a>
+        </div>
+      </div>
+    </div>
+    <div id="update_timetable_container">
+      <div id="update_timetable_wrapper">
+        <div id="timetable">
+          <table>
+            <tr class="head">
+              <th></th>
+              <td>월</td>
+              <td>화</td>
+              <td>수</td>
+              <td>목</td>
+              <td>금</td>
+            </tr>
+            <th>
+              <div class="period_long">
+                1교시
+              </div>
+              <div class="period_long">
+                2교시
+              </div>
+              <div class="period_short">
+                3교시
+              </div>
+              <div class="period_short">
+                4교시
+              </div>
+              <div class="period_long">
+                5교시
+              </div>
+              <div class="period_long">
+                6교시
+              </div>
+              <div class="period_short">
+                7교시
+              </div>
+              <div class="period_short last_row">
+                8교시
+              </div>
+            </th>
+            <td>
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses" id="mon">
+                <!--{% for i in range %}-->
+                <!--{% if daylist|get_index:forloop.counter0 == '월' %}-->
+                <!--<div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>-->
+                <!--{% endif %}-->
+                <!--{% endfor %}-->
+                <div style="top:126px; background-color:#c0e6f7; height:19px; width:25px">
+              </div>
+            </td>
+            <td>
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses" id="tue">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '화' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td>
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses" id="wed">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '수' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td>
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses" id="thu">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '목' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td>
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses" id="fri">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '금' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+          </table>
+          <div id="update_timetable">
+            <a href="/timetable" id="update_timetable_btn">시간표 수정 완료</a>
+          </div>
+        </div>
+        <div id="course_list_table">
+          <div id="course_list_table_wrapper">
+          <table>
+            <tr class="head">
+              <td>학수번호-분반</td>
+              <td>이수구분</td>
+              <td>교과목명</td>
+              <td>담당교수</td>
+              <td>학점</td>
+              <td>강의시간 / 강의실</td>
+              <td>삭제</td>
+            </tr>
+            {% for sp in selected_posts %}
+            <tr class="row" style="height: 25px;">
+              <td>{{ sp.course_id }}</td>
+              <td>{{ sp.classification }}</td>
+              <td>{{ sp.course_name }}</td>
+              <td>{{ sp.professor }}</td>
+              <td>{{ sp.credit }}</td>
+              <td>{{ sp.date_classroom }}</td>
+              <td><input type="submit" value="삭제" class="delete"></td>
+            </tr>
+            {% endfor %}
+          </table>
+            </div>
+        </div>
+        <div id="search_course">
+          <div id="search_option">
+            <div id="selectors">
+                <input type="radio" name="search_type" value="course_id" id="course_id"> 학수번호
+                <input type="radio" name="search_type" value="course_name" id="course_name"> 교과목명
+                <input type="radio" name="search_type" value="professor" id="professor"> 담당교수
+            </div>
+            <input type="text" name="검색어 입력" id="search_input">
+            <input type="submit" value="검색" id="search">
+          </div>
+          <div id="search_result_table">
+          <table>
+            <tr class="head">
+              <td>학수번호-분반</td>
+              <td>이수구분</td>
+              <td>교과목명</td>
+              <td>담당교수</td>
+              <td>학점</td>
+              <td>강의시간 / 강의실</td>
+              <td>선택</td>
+            </tr>
+            {% for post in posts %}
+            <tr class="search_result_row" style="height: 25px;">
+              <td>{{ post.course_id }}</td>
+              <td>{{ post.classification }}</td>
+              <td>{{ post.course_name }}</td>
+              <td>{{ post.professor }}</td>
+              <td>{{ post.credit }}</td>
+              <td>{{ post.date_classroom }}</td>
+              <td><input type="submit" value="선택" class="select"></td>
+            </tr>
+            {% endfor %}
+          </table>
+            </div>
+        </div>
+        </div>
+      </div>
+  </body>
+</html>

@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'yanadock',
     'user',
+    'timetable',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

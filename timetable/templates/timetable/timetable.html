@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'timetable/timetable.css' %}?after">
+    <title>timetable</title>
+  </head>
+  <body>
+    {% load filters %}
+    <div id="nav">
+      <div class="wrap">
+        <div id="logo">
+          <p>  logo </p>
+        </div>
+        <div id="logout">
+          <a href="#" id="logout_btn">logout</a>
+        </div>
+      </div>
+    </div>
+    <div id="timetable_container">
+      <div class="wrap">
+        <div id="timetable">
+          <table>
+            <tr class="head">
+              <th></th>
+              <td>월</td>
+              <td>화</td>
+              <td>수</td>
+              <td>목</td>
+              <td>금</td>
+              <td id="hours_head"></td>
+            </tr>
+            <th>
+              <div class="period_long">
+                1교시
+              </div>
+              <div class="period_long">
+                2교시
+              </div>
+              <div class="period_short">
+                3교시
+              </div>
+              <div class="period_short">
+                4교시
+              </div>
+              <div class="period_long">
+                5교시
+              </div>
+              <div class="period_long">
+                6교시
+              </div>
+              <div class="period_short">
+                7교시
+              </div>
+              <div class="period_short last_row">
+                8교시
+              </div>
+            </th>
+
+            <td id="mon">
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '월' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td id="tue">
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '화' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td id="wed">
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '수' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td id="thu">
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '목' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td id="fri">
+              <div class="cols">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="last_row"></div>
+              </div>
+              <div class="courses">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '금' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+            <td>
+              <div class="cols" id="hours_cols">
+                <div>9시</div>
+                <div>10시</div>
+                <div>11시</div>
+                <div>12시</div>
+                <div>13시</div>
+                <div>14시</div>
+                <div>15시</div>
+                <div>16시</div>
+                <div>17시</div>
+                <div class="last_row">18시</div>
+              </div>
+            </td>
+
+          </table>
+        </div>
+        <div id="update_timetable">
+          <a href="/timetable/update" id="update_timetable_btn">시간표 수정</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
