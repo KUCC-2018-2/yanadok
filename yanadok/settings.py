@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'yanadock',
+
     'user',
     'timetable',
     'django.contrib.admin',

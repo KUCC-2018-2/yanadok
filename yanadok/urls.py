@@ -18,7 +18,6 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('yanadock/', include('yanadock.urls')),
     path('', include('timetable.urls')),
     path('', TemplateView.as_view(template_name='timetable/timetable.html'), name='home'),
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
