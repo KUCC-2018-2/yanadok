@@ -1,12 +1,13 @@
+{% load staticfiles %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <title>update_timetable</title>
-    {% load static %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'timetable/update_timetable.css' %}?after">
   </head>
   <body>
+  {% if user.is_authenticated %}
   {% load filters %}
   <script type="text/javascript">
     $(document).ready(function(){
@@ -56,7 +57,7 @@
         $.ajax({
             type: "POST",
             url: '',
-            data: {'st': search_type, 'index': index, 'kw': key_word,
+            data: {'st': search_type, 'id': index, 'kw': key_word,
             'csrfmiddlewaretoken': '{{ csrf_token }}',},
 
             success: function(response) {
@@ -85,7 +86,7 @@
         $.ajax({
             type: "POST",
             url: '',
-            data: {'st': search_type, 'rindex': rindex, 'kw': key_word,
+            data: {'st': search_type, 'rid': rindex, 'kw': key_word,
             'csrfmiddlewaretoken': '{{ csrf_token }}',},
 
             success: function(response) {
@@ -111,7 +112,7 @@
           <p>  logo </p>
         </div>
         <div id="logout">
-          <a href="#" id="logout_btn">logout</a>
+          <p><a href="{% url 'logout' %}">logout</a></p>
         </div>
       </div>
     </div>
@@ -165,12 +166,11 @@
                 <div class="last_row"></div>
               </div>
               <div class="courses" id="mon">
-                <!--{% for i in range %}-->
-                <!--{% if daylist|get_index:forloop.counter0 == '월' %}-->
-                <!--<div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>-->
-                <!--{% endif %}-->
-                <!--{% endfor %}-->
-                <div style="top:126px; background-color:#c0e6f7; height:19px; width:25px">
+                {% for i in range %}
+                {% if daylist|get_index:forloop.counter0 == '월' %}
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
+                {% endif %}
+                {% endfor %}
               </div>
             </td>
             <td>
@@ -251,7 +251,7 @@
             </td>
           </table>
           <div id="update_timetable">
-            <a href="/timetable" id="update_timetable_btn">시간표 수정 완료</a>
+            <a href="/" id="update_timetable_btn">시간표 수정 완료</a>
           </div>
         </div>
         <div id="course_list_table">
@@ -318,4 +318,9 @@
         </div>
       </div>
   </body>
+  {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">login</a> |
+    <a href="{% url 'signup' %}">signup</a>
+  {% endif %}
 </html>

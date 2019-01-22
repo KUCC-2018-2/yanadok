@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+{% load staticfiles %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'timetable/timetable.css' %}?after">
     <title>timetable</title>
   </head>
   <body>
+  {% block content %}
+  {% if user.is_authenticated %}
     {% load filters %}
     <div id="nav">
       <div class="wrap">
@@ -14,7 +15,7 @@
           <p>  logo </p>
         </div>
         <div id="logout">
-          <a href="#" id="logout_btn">logout</a>
+          <p><a href="{% url 'logout' %}">logout</a></p>
         </div>
       </div>
     </div>
@@ -186,9 +187,16 @@
           </table>
         </div>
         <div id="update_timetable">
-          <a href="/timetable/update" id="update_timetable_btn">시간표 수정</a>
+          <a href="/update" id="update_timetable_btn">시간표 수정</a>
         </div>
       </div>
     </div>
   </body>
+
+  {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">login</a> |
+    <a href="{% url 'signup' %}">signup</a>
+  {% endif %}
+  {% endblock %}
 </html>
