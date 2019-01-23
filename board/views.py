@@ -9,41 +9,41 @@ from .forms import PostForm
 from . import dao
 
 
-class boardView(generic.View):
+class BoardView(generic.View):
 
     def get(self, request, course_id):
         template = loader.get_template('board/board.html')
         userId = request.user.id
 
-        posts = dao.selectAllPosts(course_id)
+        posts = dao.select_all_posts(course_id)
 
-        courselist = dao.getCourseList(userId)
-        course_name = dao.getCourseName(course_id)
-        courseIdList = []
+        courselist = dao.get_courselist(userId)
+        course_name = dao.get_course_name(course_id)
+        course_idlist = []
         for course in courselist:
-            courseIdList.append(course['course_id'])
+            course_idlist.append(course['course_id'])
 
-        pageLen = int(len(posts) / 10) + 1
-        pageRange = range(1, pageLen+1)
+        page_len = int(len(posts) / 10) + 1
+        page_range = range(1, page_len+1)
 
-        pageNum = 1
-        currentPostList = []
+        page_num = 1
+        current_postlist = []
 
-        for n in range((pageNum - 1) * 10, (pageNum) * 10):
+        for n in range((page_num  - 1) * 10, page_num * 10):
             if n < len(posts):
-                currentPostList.append(posts[n])
+                current_postlist.append(posts[n])
 
-        userlist = dao.getUserList(currentPostList)
+        userlist = dao.get_userlist(current_postlist)
 
         context = {
             'course_id': course_id,
             'course_name': course_name,
             'posts': posts,
-            'currentPostList': currentPostList,
+            'current_postlist': current_postlist,
             'userlist': userlist,
             'courselist': courselist,
-            'courseIdList': courseIdList,
-            'pageRange': pageRange,
+            'course_idlist': course_idlist,
+            'page_range': page_range,
         }
 
         return HttpResponse(template.render(context, request))
@@ -56,42 +56,42 @@ class boardView(generic.View):
             course_id = request.POST.get('course_id')
             post_type = request.POST.get('post_type')
 
-        course_name = dao.getCourseName(course_id)
+        course_name = dao.get_course_name(course_id)
 
         if post_type == None:
-            posts = dao.selectAllPosts(course_id)
+            posts = dao.select_all_posts(course_id)
         elif post_type == '스터디팀플':
-            posts = dao.selectStudyPosts(course_id)
+            posts = dao.select_study_posts(course_id)
         else:
-            posts = dao.selectAllPosts(course_id)
+            posts = dao.select_all_posts(course_id)
 
-        courselist = dao.getCourseList(userId)
-        courseIdList = []
+        courselist = dao.get_courselist(userId)
+        course_idlist = []
 
         for course in courselist:
-            courseIdList.append(course['course_id'])
+            course_idlist.append(course['course_id'])
 
-        pageLen = int(len(posts) / 10) + 1
-        pageRange = range(1, pageLen + 1)
+        page_len = int(len(posts) / 10) + 1
+        page_range = range(1, page_len + 1)
 
-        pageNum = 1
-        currentPostList = []
+        page_num = 1
+        current_postlist = []
 
-        for n in range((pageNum - 1) * 10, (pageNum) * 10):
+        for n in range((page_num - 1) * 10, page_num * 10):
             if n < len(posts):
-                currentPostList.append(posts[n])
+                current_postlist.append(posts[n])
 
-        userlist = dao.getUserList(currentPostList)
+        userlist = dao.get_userlist(current_postlist)
 
         context = {
             'course_id': course_id,
             'course_name': course_name,
             'posts': posts,
-            'currentPostList': currentPostList,
+            'current_postlist': current_postlist,
             'userlist': userlist,
             'courselist': courselist,
-            'courseIdList': courseIdList,
-            'pageRange': pageRange,
+            'course_idlist': course_idlist,
+            'page_range': page_range,
             'post_type': post_type,
         }
 

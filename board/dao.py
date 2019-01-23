@@ -1,7 +1,7 @@
 from django.db import connection
 
 
-def getCourseList(user_id):
+def get_courselist(user_id):
     cursor = connection.cursor()
     query_string = "select course.course_id, course_name from course, user, timetable where course.course_id = timetable.course_id and user.id = timetable.user_id and id=" + str(user_id)
     cursor.execute(query_string)
@@ -14,7 +14,7 @@ def getCourseList(user_id):
     return courselist
 
 
-def getCourseName(course_id):
+def get_course_name(course_id):
     cursor = connection.cursor()
     query_string = "select course_name from course where course_id=" + str(course_id)
     cursor.execute(query_string)
@@ -23,7 +23,7 @@ def getCourseName(course_id):
     return rows[0][0]
 
 
-def getUserList(posts):
+def get_userlist(posts):
     userlist = []
     for post in posts:
         cursor = connection.cursor()
@@ -35,7 +35,7 @@ def getUserList(posts):
     return userlist
 
 
-def selectAllPosts(course_id):
+def select_all_posts(course_id):
     cursor = connection.cursor()
     query_string = "select * from post where course_id=" + str(course_id)
     cursor.execute(query_string)
@@ -51,7 +51,7 @@ def selectAllPosts(course_id):
 
     return posts
 
-def selectStudyPosts(course_id):
+def select_study_posts(course_id):
     cursor = connection.cursor()
     query_string = "select * from post where post_type= '스터디/팀플' and course_id=" + str(course_id)
     cursor.execute(query_string)

@@ -1,7 +1,7 @@
 from django.db import connection
 
 
-def selectUserTimetable(userId):
+def select_user_timetable(userId):
     cursor = connection.cursor()
     query_string = "select course.course_id, course_no, semester, university, campus, classification, course_name, professor, credit, date_classroom from timetable, course where user_id=" + str(userId) + " AND course.course_id=timetable.course_id"
     cursor.execute(query_string)
@@ -19,7 +19,7 @@ def selectUserTimetable(userId):
     return posts
 
 
-def selectAllCourses():
+def select_all_courses():
     cursor = connection.cursor()
     query_string = "select * from course"
     cursor.execute(query_string)
@@ -37,7 +37,7 @@ def selectAllCourses():
     return posts
 
 
-def selectSearchResultsWithST(st, key_word):
+def select_search_results_with_st(st, key_word):
     cursor = connection.cursor()
     query_string = "select * from course where " + st + "=" + key_word
     print(query_string)
@@ -56,7 +56,7 @@ def selectSearchResultsWithST(st, key_word):
     return posts
 
 
-def selectSearchResults(key_word):
+def select_search_results(key_word):
     cursor = connection.cursor()
     query_string = "select * from course where course_no =" + key_word + " or course_name = " + key_word + " or professor=" + key_word
     print(query_string)
@@ -75,9 +75,9 @@ def selectSearchResults(key_word):
     return posts
 
 
-def updateTimetable(splist, userId):
+def update_timetable(splist, userId):
     cursor = connection.cursor()
-    rows = selectUserTimetable(userId)
+    rows = select_user_timetable(userId)
 
     for n in range(0, len(splist)):
         if splist[n] not in rows:
@@ -91,7 +91,7 @@ def updateTimetable(splist, userId):
     print(rows)
 
 
-def selectAllPosts(course_id):
+def select_all_posts(course_id):
     cursor = connection.cursor()
     query_string = "select * from post where course_id=" + str(course_id)
     cursor.execute(query_string)

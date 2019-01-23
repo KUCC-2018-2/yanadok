@@ -10,7 +10,7 @@ from django.views import generic
 from . import dao
 
 
-def getDayList(posts):
+def get_daylist(posts):
     daylist = []
 
     for p in posts:
@@ -20,7 +20,7 @@ def getDayList(posts):
     return daylist
 
 
-def getStartTimeList(posts):
+def get_starttimelist(posts):
     starttimelist = []
 
     for p in posts:
@@ -30,7 +30,7 @@ def getStartTimeList(posts):
     return starttimelist
 
 
-def getEndTimeList(posts):
+def get_endtimelist(posts):
     endtimelist = []
 
     for p in posts:
@@ -43,14 +43,14 @@ def getEndTimeList(posts):
     return endtimelist
 
 
-def getArea(starttimelist, endtimelist, sposlist, eposlist, smallArea):
+def get_area(starttimelist, endtimelist, sposlist, eposlist, small_area):
     arealist = []
 
     for n in range(0, len(starttimelist)):
         if starttimelist[n] == '3' and endtimelist[n] == '4':
-            a = smallArea
+            a = small_area
         elif starttimelist[n] == '7' and endtimelist[n] == '8':
-            a = smallArea
+            a = small_area
         else:
             a = eposlist[int(endtimelist[n]) - 1] - sposlist[int(starttimelist[n]) - 1]
 
@@ -59,7 +59,7 @@ def getArea(starttimelist, endtimelist, sposlist, eposlist, smallArea):
     return arealist
 
 
-def getPos(starttimelist, sposlist):
+def get_pos(starttimelist, sposlist):
     poslist = []
 
     for n in range(0, len(starttimelist)):
@@ -69,10 +69,10 @@ def getPos(starttimelist, sposlist):
     return poslist
 
 splist = []
-def saveSP(request, splist):
+def save_sp(request, splist):
 
     userId = request.user.id
-    splist = dao.selectUserTimetable(userId)
+    splist = dao.select_user_timetable(userId)
 
     kw = None
     st = None
@@ -87,19 +87,19 @@ def saveSP(request, splist):
 
     if kw != None and st != None:
         kw = '"' + kw + '"'
-        posts = dao.selectSearchResultsWithST(st, kw)
+        posts = dao.select_search_results_with_st(st, kw)
     elif kw != None and st == None:
         kw = '"' + kw + '"'
-        posts = dao.selectSearchResults(kw)
+        posts = dao.select_search_results(kw)
     else:
-        posts = dao.selectAllCourses()
+        posts = dao.select_all_courses()
 
     if id != None and posts[int(id)] not in splist:
-        user_courses = dao.selectUserTimetable(userId)
+        user_courses = dao.select_user_timetable(userId)
 
-        uc_daylist = getDayList(user_courses)
-        uc_starttimelist = getStartTimeList(user_courses)
-        uc_endtimelist = getEndTimeList(user_courses)
+        uc_daylist = get_daylist(user_courses)
+        uc_starttimelist = get_starttimelist(user_courses)
+        uc_endtimelist = get_endtimelist(user_courses)
 
         sp_daylist = []
         sp_starttimelist = []
@@ -132,20 +132,18 @@ def saveSP(request, splist):
     if rid != None:
         del splist[int(rid)]
 
-    print(splist)
-
     return splist
 
 
 # 메인_시간표 메뉴
-class timetableView(generic.View):
+class TimetableView(generic.View):
     def get(self, request):
         template = loader.get_template('timetable/timetable.html')
 
         userId = request.user.id
 
         if userId != None:
-            posts = dao.selectUserTimetable(userId)
+            posts = dao.select_user_timetable(userId)
 
             idlist = []
             namelist = []
@@ -158,16 +156,16 @@ class timetableView(generic.View):
                     proflist.append(p.get('professor'))
                     dclist.append(d.split(')')[1])
 
-            daylist = getDayList(posts)
-            starttimelist = getStartTimeList(posts)
-            endtimelist = getEndTimeList(posts)
+            daylist = get_daylist(posts)
+            starttimelist = get_starttimelist(posts)
+            endtimelist = get_endtimelist(posts)
 
             sposlist = [160, 238, 315, 365, 416, 492, 570, 619]
             eposlist = [222.5, 300.5, 356.6, 406.6, 478.5, 554.5, 611.6, 660.6]
-            smallArea = 63.75
+            small_area = 63.75
 
-            arealist = getArea(starttimelist, endtimelist, sposlist, eposlist, smallArea)
-            poslist = getPos(starttimelist, sposlist)
+            arealist = get_area(starttimelist, endtimelist, sposlist, eposlist, small_area)
+            poslist = get_pos(starttimelist, sposlist)
 
             context = {
                 'posts': posts,
@@ -194,24 +192,24 @@ class timetableView(generic.View):
 
 
 #시간표 수정
-class updateTimetableView(generic.View):
+class UpdateTimetableView(generic.View):
 
     def get(self, request):
         userId = request.user.id
-        posts = dao.selectAllCourses()
-        selected_posts = dao.selectUserTimetable(userId)
+        posts = dao.select_all_courses()
+        selected_posts = dao.select_user_timetable(userId)
         template = loader.get_template('timetable/update_timetable.html')
 
-        daylist = getDayList(selected_posts)
-        starttimelist = getStartTimeList(selected_posts)
-        endtimelist = getEndTimeList(selected_posts)
+        daylist = get_daylist(selected_posts)
+        starttimelist = get_starttimelist(selected_posts)
+        endtimelist = get_endtimelist(selected_posts)
 
         sposlist = [126, 146, 166, 186, 206, 226, 246, 266]
         eposlist = [145, 165, 185, 205, 225, 245, 265, 285]
-        smallArea = 19
+        small_area = 19
 
-        arealist = getArea(starttimelist, endtimelist, sposlist, eposlist, smallArea)
-        poslist = getPos(starttimelist, sposlist)
+        arealist = get_area(starttimelist, endtimelist, sposlist, eposlist, small_area)
+        poslist = get_pos(starttimelist, sposlist)
 
         context = {
             'posts': posts,
@@ -226,7 +224,7 @@ class updateTimetableView(generic.View):
 
     def post(self, request):
         userId = request.user.id
-        splist = dao.selectUserTimetable(userId)
+        splist = dao.select_user_timetable(userId)
         template = loader.get_template('timetable/update_timetable.html')
 
         kw = None
@@ -244,18 +242,18 @@ class updateTimetableView(generic.View):
 
         if kw != None and st != None:
             kw = '"' + kw + '"'
-            posts = dao.selectSearchResultsWithST(st, kw)
+            posts = dao.select_search_results_with_st(st, kw)
         elif kw != None and st == None:
             kw = '"' + kw + '"'
-            posts = dao.selectSearchResults(kw)
+            posts = dao.select_search_results(kw)
         else:
-            posts = dao.selectAllCourses()
+            posts = dao.select_all_courses()
 
-        user_courses = dao.selectUserTimetable(userId)
+        user_courses = dao.select_user_timetable(userId)
 
-        uc_daylist = getDayList(user_courses)
-        uc_starttimelist = getStartTimeList(user_courses)
-        uc_endtimelist = getEndTimeList(user_courses)
+        uc_daylist = get_daylist(user_courses)
+        uc_starttimelist = get_starttimelist(user_courses)
+        uc_endtimelist = get_endtimelist(user_courses)
 
         sp_daylist = []
         sp_starttimelist = []
@@ -288,23 +286,23 @@ class updateTimetableView(generic.View):
             else:
                 error_message = '해당 과목과 겹치는 수업이 있습니다.'
 
-        selected_posts = saveSP(request, splist)
+        selected_posts = save_sp(request, splist)
 
         if selected_posts != None:
-            daylist = getDayList(selected_posts)
-            starttimelist = getStartTimeList(selected_posts)
-            endtimelist = getEndTimeList(selected_posts)
+            daylist = get_daylist(selected_posts)
+            starttimelist = get_starttimelist(selected_posts)
+            endtimelist = get_endtimelist(selected_posts)
 
             sposlist = [126, 146, 166, 186, 206, 226, 246, 266]
             eposlist = [145, 165, 185, 205, 225, 245, 265, 285]
             smallarea = 19
 
-            arealist = getArea(starttimelist, endtimelist, sposlist, eposlist, smallarea)
-            poslist = getPos(starttimelist, sposlist)
+            arealist = get_area(starttimelist, endtimelist, sposlist, eposlist, smallarea)
+            poslist = get_pos(starttimelist, sposlist)
 
-        splist = saveSP(request, splist)
+        splist = save_sp(request, splist)
 
-        dao.updateTimetable(splist, userId)
+        dao.update_timetable(splist, userId)
 
         print(error_message)
 
