@@ -2,12 +2,69 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
     <title></title>
   </head>
   <body>
+
+  <div id="wrapper">
   {% if user.is_authenticated %}
   {% load filters %}
+      <script>
+      $(document).ready(function(){
+      $(document).on('click', '.board_tab_a', function(){
+        var post_type = $(this).attr('id');
+        var course_id = {{ course_id }};
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'course_id': course_id, 'post_type': post_type,
+            'csrfmiddlewaretoken': '{{ csrf_token }}', },
+
+            success: function(response) {
+                $dom = $(document.createElement("html"));
+                $dom[0].innerHTML = response;
+                $body = $dom.find("#post_list_container table")[0];
+
+                $curDom = $('html');
+                $div = $curDom.find("#post_list_container")[0];
+
+                $($div).html($body);
+                $('.board_tab_a').removeClass('active_tab');
+                $('#' + post_type).addClass('active_tab');
+            }
+         })
+    })
+
+    $(document).on('click', '.page_num', function(){
+        var page_num = $(this).attr('id');
+        var course_id = {{ course_id }};
+        var post_type = $('.active_tab').attr('id')
+
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'course_id': course_id, 'page_num': page_num, 'post_type': post_type,
+            'csrfmiddlewaretoken': '{{ csrf_token }}', },
+
+            success: function(response) {
+                $dom = $(document.createElement("html"));
+                $dom[0].innerHTML = response;
+                $body = $dom.find("#post_list_container table")[0];
+
+                $curDom = $('html');
+                $div = $curDom.find("#post_list_container")[0];
+
+                $($div).html($body);
+            }
+         })
+    })
+  });
+    </script>
+
     <div id="nav">
       <div class="wrap">
         <div id="logo">
@@ -21,36 +78,39 @@
     <div id="board_container">
         <div id="board_nav">
         <div class="dropdown_container">
-          <button class="dropbtn">Dropdown</button>
+          <button class="dropbtn">강의 메뉴</button>
           <div class="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
+              {% for course in courselist %}
+            <a href="{% url 'board:board' courseIdList|get_index:forloop.counter0 %}" class="course_a">{{ course.course_name }}</a>
+              {% endfor %}
           </div>
         </div>
+            <div>
+                <p>{{ course_name }}</p>
+            </div>
         <div id="board_tab_container">
           <ul id="board_tab_ul">
             <li class="board_tab_li current-tab">
-              <a class="board_tab_a" href="#">전체</a>
+              <a class="board_tab_a active_tab" href="" id="전체">전체</a>
             </li>
             <li class="board_tab_li">
-                  <a class="board_tab_a">공지</a>
+                  <a class="board_tab_a" id="공지">공지</a>
             </li>
             <li class="board_tab_li">
-                  <a class="board_tab_a" href="#">스터디/팀플</a>
+                  <a class="board_tab_a" id="스터디팀플">스터디/팀플</a>
             </li>
           </ul>
         </div>
         </div>
         <div id="post_list_container">
-            <table>
+            <table id="post_list_table">
               <tr class="head">
                 <td>글번호</td>
                 <td>제목</td>
                 <td>작성자</td>
                 <td>작성시간</td>
               </tr>
-                {% for post in posts %}
+                {% for post in currentPostList %}
               <tr class="rows">
                 <td>{{ post.post_id }}</td>
                 <td>{{ post.title }}</td>
@@ -63,26 +123,23 @@
         <div id="pagination_container">
             <div id="pagination">
               <a href="#">&laquo;</a>
-              <a href="#">1</a>
-              <a class="active" href="#">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
+                {% for n in pageRange %}
+              <a href="#" class="page_num" id="{{ n }}">{{ n }}</a>
+                {% endfor %}
               <a href="#">&raquo;</a>
           </div>
         </div>
+
         <div id="search_container">
-          <input type="text" name="검색어 입력" id="search_input">
+          <input type="text" name="검색어 입력" id="search_input" placeholder="글제목으로 검색">
           <input type="submit" value="검색" id="search">
         </div>
-        <div>
-            <a href="{% url 'new_post' %}">글쓰기</a>
-        </div>
     </div>
-  </body>
-  {% else %}
+        {% else %}
     <p>You are not logged in</p>
     <a href="{% url 'login' %}">login</a> |
     <a href="{% url 'signup' %}">signup</a>
   {% endif %}
+        </div>
+  </body>
 </html>

@@ -2,13 +2,33 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'timetable/timetable.css' %}?after">
+    <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
     <title>timetable</title>
   </head>
   <body>
+    <div id="wrapper">
     {% block content %}
     {% csrf_token %}
     {% if user.is_authenticated %}
+    <script>
+      $(document).ready(function(){
+      $(document).on('click', '.courses_a', function(){
+        var id = $(this).attr('id');
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}', },
+
+            success: function(response) {
+
+            }
+         })
+    })
+  });
+    </script>
     {% load filters %}
     <div id="nav">
       <div class="wrap">
@@ -76,8 +96,13 @@
               <div class="courses">
                 {% for i in range %}
                 {% if daylist|get_index:forloop.counter0 == '월' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
+                  <form target="" method="post" name="1">
+                {% csrf_token %}
+                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
+                  </form>
+                </div>
                 {% endif %}
                 {% endfor %}
               </div>
@@ -98,8 +123,13 @@
               <div class="courses">
                 {% for i in range %}
                 {% if daylist|get_index:forloop.counter0 == '화' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
+                  <form target="" method="post" name="1">
+                {% csrf_token %}
+                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
+                  </form>
+                </div>
                 {% endif %}
                 {% endfor %}
               </div>
@@ -120,8 +150,13 @@
               <div class="courses">
                 {% for i in range %}
                 {% if daylist|get_index:forloop.counter0 == '수' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
+                  <form target="" method="post" name="1">
+                {% csrf_token %}
+                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
+                  </form>
+                </div>
                 {% endif %}
                 {% endfor %}
               </div>
@@ -142,8 +177,13 @@
               <div class="courses">
                 {% for i in range %}
                 {% if daylist|get_index:forloop.counter0 == '목' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
+                  <form target="" method="post" name="1">
+                {% csrf_token %}
+                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
+                  </form>
+                </div>
                 {% endif %}
                 {% endfor %}
               </div>
@@ -164,8 +204,13 @@
               <div class="courses">
                 {% for i in range %}
                 {% if daylist|get_index:forloop.counter0 == '금' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px"><p>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</p></div>
+                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
+                  <form target="" method="post" name="1">
+                {% csrf_token %}
+                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
+                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
+                  </form>
+                </div>
                 {% endif %}
                 {% endfor %}
               </div>
@@ -192,13 +237,16 @@
         </div>
       </div>
     </div>
-  </body>
 
-  {% else %}
+        {% else %}
     <p>Welcome to Yanadok</p>
     <a href="{% url 'login' %}">login</a> |
     <a href="{% url 'signup' %}">signup</a> |
     <a href="{% url 'password_reset' %}">reset password</a>
   {% endif %}
   {% endblock %}
+        </div>
+  </body>
+
+
 </html>

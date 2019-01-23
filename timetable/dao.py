@@ -89,3 +89,20 @@ def updateTimetable(splist, userId):
             query_string = "delete from timetable where course_id=" + str(rows[n]['course_id']) + " and user_id=" + str(userId)
             cursor.execute(query_string)
     print(rows)
+
+
+def selectAllPosts(course_id):
+    cursor = connection.cursor()
+    query_string = "select * from post where course_id=" + str(course_id)
+    cursor.execute(query_string)
+    rows = cursor.fetchall()
+    posts = []
+    for row in rows:
+        dic = {'post_id': row[0], 'user_id': row[1],
+               'course_id': row[2], 'title': row[3],
+               'password': row[4], 'content': row[5],
+               'post_type': row[6], 'is_closed': row[7],
+               'date': row[8]}
+        posts.append(dic)
+
+    return posts
