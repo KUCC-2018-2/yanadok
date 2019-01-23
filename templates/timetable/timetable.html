@@ -6,8 +6,9 @@
     <title>timetable</title>
   </head>
   <body>
-  {% block content %}
-  {% if user.is_authenticated %}
+    {% block content %}
+    {% csrf_token %}
+    {% if user.is_authenticated %}
     {% load filters %}
     <div id="nav">
       <div class="wrap">

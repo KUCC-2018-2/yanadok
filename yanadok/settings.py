@@ -134,3 +134,9 @@ AUTH_USER_MODEL = 'user.User'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'kuccyanadok@gmail.com'
+EMAIL_HOST_PASSWORD = 'kucc951223'
+EMAIL_PORT = 587
