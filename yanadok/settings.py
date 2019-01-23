@@ -132,9 +132,11 @@ STATICFILES_DIRS = [
 
 AUTH_USER_MODEL = 'user.User'
 
+#   login & logout
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
+#   confirmation email
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'kuccyanadok@gmail.com'
