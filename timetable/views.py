@@ -1,7 +1,9 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.template import loader
 from django.views import generic
 
@@ -66,8 +68,9 @@ def getPos(starttimelist, sposlist):
 
     return poslist
 
+splist = []
+def saveSP(request, splist):
 
-def saveSP(request):
     userId = request.user.id
     splist = dao.selectUserTimetable(userId)
 
@@ -92,10 +95,44 @@ def saveSP(request):
         posts = dao.selectAllCourses()
 
     if id != None and posts[int(id)] not in splist:
-        splist.append(posts[int(id)])
+        user_courses = dao.selectUserTimetable(userId)
+
+        uc_daylist = getDayList(user_courses)
+        uc_starttimelist = getStartTimeList(user_courses)
+        uc_endtimelist = getEndTimeList(user_courses)
+
+        sp_daylist = []
+        sp_starttimelist = []
+        sp_endtimelist = []
+
+        templist = posts[int(id)].get('date_classroom').split('/ ')
+
+        for d in templist:
+            sp_daylist.append(d[0])
+            sp_starttimelist.append(d[2])
+            if d[3] == '-':
+                sp_endtimelist.append(d[4])
+            else:
+                sp_endtimelist.append(d[2])
+
+        is_valid = 1
+        for i in range(0, len(sp_daylist)):
+            for j in range(0, len(uc_daylist)):
+                if sp_daylist[i] == uc_daylist[j]:
+                    if int(sp_starttimelist[i]) >= int(uc_starttimelist[j]) and int(sp_starttimelist[i]) <= int(uc_endtimelist[j]):
+                        is_valid = 0
+                        break
+                    elif int(sp_starttimelist[i]) <= int(uc_starttimelist[j]) and int(sp_endtimelist[i]) >= int(uc_starttimelist[j]):
+                        is_valid = 0
+                        break
+
+        if (is_valid == 1):
+            splist.append(posts[int(id)])
 
     if rid != None:
         del splist[int(rid)]
+
+    print(splist)
 
     return splist
 
@@ -110,11 +147,13 @@ class timetableView(generic.View):
         if userId != None:
             posts = dao.selectUserTimetable(userId)
 
+            idlist = []
             namelist = []
             proflist = []
             dclist = []
             for p in posts:
                 for d in p.get('date_classroom').split('/ '):
+                    idlist.append(p.get('course_id'))
                     namelist.append(p.get('course_name'))
                     proflist.append(p.get('professor'))
                     dclist.append(d.split(')')[1])
@@ -132,6 +171,7 @@ class timetableView(generic.View):
 
             context = {
                 'posts': posts,
+                'idlist': idlist,
                 'namelist': namelist,
                 'proflist': proflist,
                 'dclist': dclist,
@@ -144,6 +184,19 @@ class timetableView(generic.View):
             context = {}
 
         return HttpResponse(template.render(context, request))
+
+    # def post(self, request):
+    #     template = loader.get_template('board/board.html')
+    #
+    #     if request.method == "POST":
+    #         course_id = request.POST.get('course_id')
+    #
+    #     context = {
+    #         'course_id': course_id,
+    #     }
+    #
+    #
+    #     return HttpResponse(template.render(context, request))
 
 
 #시간표 수정
@@ -179,12 +232,14 @@ class updateTimetableView(generic.View):
 
     def post(self, request):
         userId = request.user.id
+        splist = dao.selectUserTimetable(userId)
         template = loader.get_template('timetable/update_timetable.html')
 
         kw = None
         st = None
         id = None
         rid = None
+        error_message = None
 
         if request.method == "POST":
             st = request.POST.get('st')
@@ -202,10 +257,44 @@ class updateTimetableView(generic.View):
         else:
             posts = dao.selectAllCourses()
 
-        if id != None or rid != None:
-            selected_posts = saveSP(request)
-        else:
-            selected_posts = saveSP(request)
+        user_courses = dao.selectUserTimetable(userId)
+
+        uc_daylist = getDayList(user_courses)
+        uc_starttimelist = getStartTimeList(user_courses)
+        uc_endtimelist = getEndTimeList(user_courses)
+
+        sp_daylist = []
+        sp_starttimelist = []
+        sp_endtimelist = []
+
+        if id != None:
+            templist = posts[int(id)].get('date_classroom').split('/ ')
+
+            for d in templist:
+                sp_daylist.append(d[0])
+                sp_starttimelist.append(d[2])
+                if d[3] == '-':
+                    sp_endtimelist.append(d[4])
+                else:
+                    sp_endtimelist.append(d[2])
+
+            is_valid = 1
+            for i in range(0, len(sp_daylist)):
+                for j in range(0, len(uc_daylist)):
+                    if sp_daylist[i] == uc_daylist[j]:
+                        if int(sp_starttimelist[i]) >= int(uc_starttimelist[j]) and int(sp_starttimelist[i]) <= int(uc_endtimelist[j]):
+                            is_valid = 0
+                            break
+                        elif int(sp_starttimelist[i]) <= int(uc_starttimelist[j]) and int(sp_endtimelist[i]) >= int(uc_starttimelist[j]):
+                            is_valid = 0
+                            break
+
+            if (is_valid == 1):
+                error_message = None
+            else:
+                error_message = '해당 과목과 겹치는 수업이 있습니다.'
+
+        selected_posts = saveSP(request, splist)
 
         if selected_posts != None:
             daylist = getDayList(selected_posts)
@@ -219,8 +308,11 @@ class updateTimetableView(generic.View):
             arealist = getArea(starttimelist, endtimelist, sposlist, eposlist, smallarea)
             poslist = getPos(starttimelist, sposlist)
 
-        splist = saveSP(request)
+        splist = saveSP(request, splist)
+
         dao.updateTimetable(splist, userId)
+
+        print(error_message)
 
         context = {
             'posts': posts,
@@ -229,6 +321,7 @@ class updateTimetableView(generic.View):
             'arealist': arealist,
             'poslist': poslist,
             'range': range(0, len(daylist)),
+            'error_message': error_message,
         }
 
         return HttpResponse(template.render(context, request))

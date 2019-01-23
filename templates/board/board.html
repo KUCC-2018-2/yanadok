@@ -1,0 +1,85 @@
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
+    <title></title>
+  </head>
+  <body>
+  {% if user.is_authenticated %}
+  {% load filters %}
+    <div id="nav">
+      <div class="wrap">
+        <div id="logo">
+          <p>  logo </p>
+        </div>
+        <div id="logout">
+          <p><a href="{% url 'logout' %}">logout</a></p>
+        </div>
+      </div>
+    </div>
+    <div id="board_container">
+        <div id="board_nav">
+        <div class="dropdown_container">
+          <button class="dropbtn">Dropdown</button>
+          <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+          </div>
+        </div>
+        <div id="board_tab_container">
+          <ul id="board_tab_ul">
+            <li class="board_tab_li current-tab">
+              <a class="board_tab_a" href="#">전체</a>
+            </li>
+            <li class="board_tab_li">
+                  <a class="board_tab_a">공지</a>
+            </li>
+            <li class="board_tab_li">
+                  <a class="board_tab_a" href="#">스터디/팀플</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+        <div id="post_list_container">
+            <table>
+              <tr class="head">
+                <td>글번호</td>
+                <td>제목</td>
+                <td>작성자</td>
+                <td>작성시간</td>
+              </tr>
+                {% for post in posts %}
+              <tr class="rows">
+                <td>{{ post.post_id }}</td>
+                <td>{{ post.title }}</td>
+                <td>{{ userlist|get_index:forloop.counter0 }}</td>
+                <td>{{ post.date }}</td>
+              </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="pagination_container">
+            <div id="pagination">
+              <a href="#">&laquo;</a>
+              <a href="#">1</a>
+              <a class="active" href="#">2</a>
+              <a href="#">3</a>
+              <a href="#">4</a>
+              <a href="#">5</a>
+              <a href="#">&raquo;</a>
+          </div>
+        </div>
+        <div id="search_container">
+          <input type="text" name="검색어 입력" id="search_input">
+          <input type="submit" value="검색" id="search">
+        </div>
+    </div>
+  </body>
+  {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">login</a> |
+    <a href="{% url 'signup' %}">signup</a>
+  {% endif %}
+</html>
