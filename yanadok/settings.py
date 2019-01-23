@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
+    'board',
     'user',
     'timetable',
     'django.contrib.admin',

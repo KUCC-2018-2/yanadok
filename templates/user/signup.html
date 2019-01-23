@@ -14,7 +14,7 @@
         {% endfor %}
       </p>
       {% endfor %}
-    {% if invalid_email %}<p><strong>{{ invalid_email }}</strong></p>{% endif %}
+    {% if invalid_email %}<p style="color: red">{{ invalid_email }}</p>{% endif %}
     <button type="submit">Sign up</button>
   </form>
 {% endblock %}
