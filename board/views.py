@@ -5,7 +5,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.views import generic
+
+from timetable.models import Course
 from .forms import PostForm
+
 
 from . import dao
 
@@ -107,52 +110,24 @@ class BoardRedirectionView(generic.View):
         return HttpResponseRedirect(reverse('timetable:home'))
 
 
-def new_post(request, course_id):
-    template = 'board/new_post.html'
-    form = PostForm(request.POST or None)
-    user_id = request.user.id
-    if form.is_valid():
-        form.save()
-
-    else:
-        form = PostForm()
-
-    context = {
-        'form': form,
-        'course_id': course_id,
-        'user_id': user_id,
-    }
-    return render(request, template, context)
-
-
 class NewPost(generic.View):
 
     def get(self, request, course_id):
         template = 'board/new_post.html'
-        form = PostForm(request.POST or None)
-        user_id = request.user.id
+        form = PostForm()
 
-        context = {
-            'form': form,
-            'course_id': course_id,
-            'user_id': user_id,
-        }
-        return render(request, template, context)
+        return render(request, template, {'form': form, })
 
     def post(self, request, course_id):
         template = 'board/new_post.html'
         form = PostForm(request.POST or None)
-        user_id = request.user.id
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.user_id = request.user
+            post.course_id = Course.objects.get(course_id=course_id)
+            post.save()
             return redirect('board:board', course_id)
         else:
             form = PostForm()
 
-        context = {
-            'form': form,
-            'course_id': course_id,
-            'user_id': user_id,
-        }
-        return render(request, template, context)
-
+        return render(request, template, {'form': form, })
