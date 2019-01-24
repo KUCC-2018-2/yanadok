@@ -137,6 +137,8 @@ class EditPost(generic.View):
     def get(self, request, course_id, post_id):
         template = 'board/new_post.html'
         posting = Post.objects.get(post_id=post_id)
+        if posting.user_id != request.user:
+            return HttpResponse('잘못된 접근입니다.')
         form = PostForm(instance=posting)
         return render(request, template, {'form': form, })
 
