@@ -6,6 +6,7 @@ from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
+from board.models import Post
 from timetable.models import Course
 from .forms import PostForm
 
@@ -103,10 +104,10 @@ class BoardView(generic.View):
 
 
 class BoardRedirectionView(generic.View):
-    def get(self, request):
+    def get(self):
         return HttpResponseRedirect(reverse('timetable:home'))
 
-    def post(self, request):
+    def post(self):
         return HttpResponseRedirect(reverse('timetable:home'))
 
 
@@ -115,7 +116,6 @@ class NewPost(generic.View):
     def get(self, request, course_id):
         template = 'board/new_post.html'
         form = PostForm()
-
         return render(request, template, {'form': form, })
 
     def post(self, request, course_id):
@@ -129,5 +129,28 @@ class NewPost(generic.View):
             return redirect('board:board', course_id)
         else:
             form = PostForm()
-
         return render(request, template, {'form': form, })
+
+
+class EditPost(generic.View):
+
+    def get(self, request, course_id, post_id):
+        template = 'board/new_post.html'
+        posting = Post.objects.get(post_id=post_id)
+        form = PostForm(instance=posting)
+        return render(request, template, {'form': form, })
+
+    def post(self, request, course_id, post_id):
+        template = 'board/new_post.html'
+        posting = Post.objects.get(post_id=post_id)
+        form = PostForm(request.POST, instance=posting)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user_id = request.user
+            post.course_id = Course.objects.get(course_id=course_id)
+            post.save()
+            return redirect('board:board', course_id)
+        else:
+            form = PostForm(instance=posting)
+        return render(request, template, {'form': form, })
+
