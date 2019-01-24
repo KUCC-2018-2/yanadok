@@ -6,13 +6,14 @@ from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
-from board.models import Post
-from timetable.models import Course
+from .models import Post
+from django.apps import apps
 from .forms import PostForm
 
 
 from . import dao
 
+course = apps.get_model('timetable', 'Course')
 
 class BoardView(generic.View):
 
@@ -124,7 +125,7 @@ class NewPost(generic.View):
         if form.is_valid():
             post = form.save(commit=False)
             post.user_id = request.user
-            post.course_id = Course.objects.get(course_id=course_id)
+            post.course_id = course.objects.get(course_id=course_id)
             post.save()
             return redirect('board:board', course_id)
         else:
@@ -149,10 +150,70 @@ class EditPost(generic.View):
         if form.is_valid():
             post = form.save(commit=False)
             post.user_id = request.user
-            post.course_id = Course.objects.get(course_id=course_id)
+            post.course_id = course.objects.get(course_id=course_id)
             post.save()
             return redirect('board:board', course_id)
         else:
             form = PostForm(instance=posting)
         return render(request, template, {'form': form, })
+
+
+class PostView(generic.View):
+    def get(self, request, post_id):
+        template = loader.get_template('board/post.html')
+
+        post = dao.select_post(post_id)
+        like_num = dao.get_like_num(post_id)
+        course_id = post.get('course_id').course_id
+        print(course_id)
+
+        user_id = request.user.id
+        like_active = dao.like_active(post_id, user_id)
+        if like_active == True:
+            message = '좋아요 취소'
+            like_class = 'like_active'
+        else:
+            message ='좋아요'
+            like_class = 'like'
+
+        context = {
+            'post': post,
+            'like_num': like_num,
+            'message': message,
+            'like_class': like_class,
+            'course_id': course_id,
+        }
+
+        return HttpResponse(template.render(context, request))
+
+
+    def post(self, request, post_id):
+        template = loader.get_template('board/post.html')
+
+        if request.method == "POST":
+            like = request.POST.get('like')
+
+        user_id = request.user.id
+        if like == 'like_active':
+            dao.delete_like(post_id, user_id)
+            message = '좋아요'
+            like_class = 'like'
+        else:
+            dao.insert_like(post_id, user_id)
+            message = '좋아요 취소'
+            like_class = 'like_active'
+
+        post = dao.select_post(post_id)
+        course_id = post.get('course_id').course_id
+        like_num = dao.get_like_num(post_id)
+
+        context = {
+            'post': post,
+            'like_num': like_num,
+            'message': message,
+            'like_class': like_class,
+            'course_id': course_id,
+        }
+
+        return HttpResponse(template.render(context, request))
 

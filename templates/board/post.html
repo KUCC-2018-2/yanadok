@@ -1,0 +1,81 @@
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'board/post.css' %}?after">
+    <title></title>
+  </head>
+  <body>
+  <script>
+      $(document).ready(function(){
+      $(document).on('click', '#like_btn', function(){
+        var like = $('#like_btn').attr('class');
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'board:post_like' post.post_id %}",
+            data: {'like': like,
+            'csrfmiddlewaretoken': '{{ csrf_token }}', },
+
+            success: function(response) {
+
+              $dom = $(document.createElement("html"));
+              $dom[0].innerHTML = response;
+              $body = $dom.find("#like_btn_wrapper")[0];
+
+              $curDom = $('html');
+              $div = $curDom.find("#like_container")[0];
+
+              $($div).html($body);
+
+              if (like == 'like_active') {
+                $('#like_btn').removeClass('like_active');
+                $('#like_btn').addClass('like');
+               }
+              else {
+                $('#like_btn').removeClass('like');
+                $('#like_btn').addClass('like_active');
+              }
+            }
+         })
+    })
+  });
+    </script>
+    <div id="nav">
+      <div class="wrap">
+        <div id="logo">
+          <p>  logo </p>
+        </div>
+        <div id="logout">
+          <p><a href="{% url 'logout' %}">logout</a></p>
+        </div>
+      </div>
+    </div>
+    <div id="post_container">
+      {% if post %}
+      <div id="title">
+        <p> {{ post.title }} </p>
+      </div>
+      <div id="post_info">
+        <p id="username"> {{ post.user_id }} </p>
+        <p id="time"> {{ post.upload_time }} </p>
+      </div>
+          <div id="post_content">
+            <p> {{ post.content}} </p>
+          </div>
+          <div id="like_container">
+            <div id="like_btn_wrapper">
+              <a class="{{ like_class }}" id="like_btn" style="width:100px;">{{ message }}</a>
+            <p>좋아요 {{ like_num }}개</p>
+              </div>
+          </div>
+      <div id="post_list">
+        <a href="{% url 'board:board' course_id %}">글목록</a>
+      </div>
+      {% else %}
+        <p>해당 게시글이 존재하지 않습니다.</p>
+        {% endif %}
+    </div>
+  </body>
+</html>

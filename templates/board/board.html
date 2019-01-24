@@ -113,7 +113,12 @@
                 {% for post in current_postlist %}
               <tr class="rows">
                 <td>{{ post.post_id }}</td>
-                <td>{{ post.title }}</td>
+                <td>
+                    <form target="" method="post" name="1">
+                {% csrf_token %}
+                <a href="{% url 'board:post' post.post_id %}"class="post_a" id={{ post.post_id }}>{{ post.title }}</a>
+                </form>
+                </td>
                 <td>{{ userlist|get_index:forloop.counter0 }}</td>
                 <td>{{ post.upload_time }}</td>
               </tr>
