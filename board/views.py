@@ -1,8 +1,9 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.urls import reverse
 from django.views import generic
 from .forms import PostForm
 
@@ -97,6 +98,13 @@ class BoardView(generic.View):
 
         return HttpResponse(template.render(context, request))
 
+
+class BoardRedirectionView(generic.View):
+    def get(self, request):
+        return HttpResponseRedirect(reverse('timetable:home'))
+
+    def post(self, request):
+        return HttpResponseRedirect(reverse('timetable:home'))
 
 def new_post(request):
     template='board/new_post.html'
