@@ -1,4 +1,5 @@
 from django.contrib import admin
-from board.models import Post
+from .models import Post, PostLike
 
 admin.site.register(Post)
+admin.site.register(PostLike)

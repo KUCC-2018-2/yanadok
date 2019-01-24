@@ -19,11 +19,12 @@ class BoardView(generic.View):
 
     def get(self, request, course_id):
         template = loader.get_template('board/board.html')
-        userId = request.user.id
+        user_id = request.user.id
 
         posts = dao.select_all_posts(course_id)
 
-        courselist = dao.get_courselist(userId)
+        courselist = dao.get_courselist(user_id)
+        # print(user_id)
         course_name = dao.get_course_name(course_id)
         course_idlist = []
         for course in courselist:
@@ -165,7 +166,7 @@ class PostView(generic.View):
         post = dao.select_post(post_id)
         like_num = dao.get_like_num(post_id)
         course_id = post.get('course_id').course_id
-        print(course_id)
+        # print(course_id)
 
         user_id = request.user.id
         like_active = dao.like_active(post_id, user_id)

@@ -1,47 +1,40 @@
-from django.db import connection
+# from django.db import connection
 from .models import Post, PostLike
 from django.apps import apps
 
 
+course = apps.get_model('timetable', 'Course')
+timetable = apps.get_model('timetable', 'Timetable')
+user = apps.get_model('user', 'User')
+
+
 def get_courselist(user_id):
-    cursor = connection.cursor()
-    query_string = "select course.course_id, course_name from course, user, timetable where course.course_id = timetable.course_id and user.id = timetable.user_id and id=" + str(user_id)
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
+    temp_rows = timetable.objects.filter(user_id=user_id)
+
     courselist = []
-    for row in rows:
-        dic = {'course_id': row[0], 'course_name': row[1],}
+    for tr in temp_rows:
+        row = course.objects.filter(course_id=tr.course_id.course_id)
+        dic = {'course_id': row[0].course_id, 'course_name': row[0].course_name,}
         courselist.append(dic)
 
     return courselist
 
 
 def get_course_name(course_id):
-    cursor = connection.cursor()
-    query_string = "select course_name from course where course_id=" + str(course_id)
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
+    rows = course.objects.filter(course_id=course_id)
 
-    return rows[0][0]
+    return rows[0].course_name
 
 
 def get_userlist(posts):
     userlist = []
     for post in posts:
-        cursor = connection.cursor()
-        query_string = "select username from user, post where post.user_id = user.id and post_id=" + str(post['post_id'])
-        cursor.execute(query_string)
-        rows = cursor.fetchall()
-        userlist.append(rows[0][0])
+        userlist.append(post.get('user_id'))
 
     return userlist
 
 
 def select_all_posts(course_id):
-    # cursor = connection.cursor()
-    # query_string = "select * from post where course_id=" + str(course_id)
-    # cursor.execute(query_string)
-    # rows = cursor.fetchall()
     rows = Post.objects.filter(course_id=course_id).order_by('-post_id')
     posts = []
     for row in rows:
@@ -56,10 +49,6 @@ def select_all_posts(course_id):
 
 
 def select_study_posts(course_id):
-    # cursor = connection.cursor()
-    # query_string = "select * from post where post_type= '스터디/팀플' and course_id=" + str(course_id)
-    # cursor.execute(query_string)
-    # rows = cursor.fetchall()
     rows = Post.objects.filter(course_id=course_id).filter(post_type='스터디/팀플').order_by('-post_id')
     posts = []
     for row in rows:

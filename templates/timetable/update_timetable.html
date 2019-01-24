@@ -15,8 +15,8 @@
       var key_word;
       var index ;
 
-      $(document).on('click', '#course_id', function(){
-        search_type = 'course_id';
+      $(document).on('click', '#course_no', function(){
+        search_type = 'course_no';
       });
 
       $(document).on('click', '#course_name', function(){
@@ -268,7 +268,7 @@
             </tr>
             {% for sp in selected_posts %}
             <tr class="row" style="height: 25px;">
-              <td>{{ sp.course_id }}</td>
+              <td>{{ sp.course_no }}</td>
               <td>{{ sp.classification }}</td>
               <td>{{ sp.course_name }}</td>
               <td>{{ sp.professor }}</td>
@@ -283,7 +283,7 @@
         <div id="search_course">
           <div id="search_option">
             <div id="selectors">
-                <input type="radio" name="search_type" value="course_id" id="course_id"> 학수번호
+                <input type="radio" name="search_type" value="course_no" id="course_no"> 학수번호
                 <input type="radio" name="search_type" value="course_name" id="course_name"> 교과목명
                 <input type="radio" name="search_type" value="professor" id="professor"> 담당교수
             </div>
@@ -303,7 +303,7 @@
             </tr>
             {% for post in posts %}
             <tr class="search_result_row" style="height: 25px;">
-              <td>{{ post.course_id }}</td>
+              <td>{{ post.course_no }}</td>
               <td>{{ post.classification }}</td>
               <td>{{ post.course_name }}</td>
               <td>{{ post.professor }}</td>

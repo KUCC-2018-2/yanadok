@@ -20,8 +20,8 @@ class Course(models.Model):
 
 
 class Timetable(models.Model):
-    user_id = models.ForeignKey('user.User', models.DO_NOTHING, primary_key=True)
-    course_id = models.ForeignKey(Course, models.DO_NOTHING)
+    user_id = models.ForeignKey('user.User', models.DO_NOTHING, db_column='user_id', primary_key=True)
+    course_id = models.ForeignKey('Course', models.DO_NOTHING, db_column='course_id')
 
     class Meta:
         managed = False

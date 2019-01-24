@@ -1,108 +1,107 @@
-from django.db import connection
+# from django.db import connection
+from .models import Course, Timetable
+from django.apps import apps
 
 
-def select_user_timetable(userId):
-    cursor = connection.cursor()
-    query_string = "select course.course_id, course_no, semester, university, campus, classification, course_name, professor, credit, date_classroom from timetable, course where user_id=" + str(userId) + " AND course.course_id=timetable.course_id"
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
-    posts = []
-    for row in rows:
-        dic = {'course_id': row[0], 'course_no': row[1],
-               'semester': row[2], 'university': row[3],
-               'campus': row[4], 'classification': row[5],
-               'course_name': row[6], 'professor': row[7],
-               'credit': row[8], 'date_classroom': row[9]
+user = apps.get_model('user', 'User')
+post = apps.get_model('board', 'Post')
+
+
+def select_user_timetable(user_id):
+    temp_rows = Timetable.objects.filter(user_id=user_id)
+    courselist = []
+    for tr in temp_rows:
+        row = Course.objects.filter(course_id=tr.course_id.course_id)
+        dic = {'course_id': row[0].course_id, 'course_no': row[0].course_no,
+               'semester': row[0].semester, 'university': row[0].university,
+               'campus': row[0].campus, 'classification': row[0].classification,
+               'course_name': row[0].course_name, 'professor': row[0].professor,
+               'credit': row[0].credit, 'date_classroom': row[0].date_classroom,
                }
-        posts.append(dic)
+        courselist.append(dic)
 
-    return posts
+    return courselist
 
 
 def select_all_courses():
-    cursor = connection.cursor()
-    query_string = "select * from course"
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
-    posts = []
+    rows = Course.objects.all()
+    courselist = []
     for row in rows:
-        dic = {'course_id': row[0], 'course_no': row[1],
-               'semester': row[2], 'university': row[3],
-               'campus': row[4], 'classification': row[5],
-               'course_name': row[6], 'professor': row[7],
-               'credit': row[8], 'date_classroom': row[9]
+        dic = {'course_id': row.course_id, 'course_no': row.course_no,
+               'semester': row.semester, 'university': row.university,
+               'campus': row.campus, 'classification': row.classification,
+               'course_name': row.course_name, 'professor': row.professor,
+               'credit': row.credit, 'date_classroom': row.date_classroom,
                }
-        posts.append(dic)
+        courselist.append(dic)
 
-    return posts
+    return courselist
 
 
 def select_search_results_with_st(st, key_word):
-    cursor = connection.cursor()
-    query_string = "select * from course where " + st + "=" + key_word
-    print(query_string)
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
-    posts = []
-    for row in rows:
-        dic = {'course_id': row[0], 'course_no': row[1],
-               'semester': row[2], 'university': row[3],
-               'campus': row[4], 'classification': row[5],
-               'course_name': row[6], 'professor': row[7],
-               'credit': row[8], 'date_classroom': row[9]
-               }
-        posts.append(dic)
+    if st == 'course_no':
+        rows = Course.objects.filter(course_no=key_word)
+    elif st == 'course_name':
+        rows = Course.objects.filter(course_name=key_word)
+    else:
+        rows = Course.objects.filter(professor=key_word)
 
-    return posts
+    courselist = []
+    for row in rows:
+        dic = {'course_id': row.course_id, 'course_no': row.course_no,
+               'semester': row.semester, 'university': row.university,
+               'campus': row.campus, 'classification': row.classification,
+               'course_name': row.course_name, 'professor': row.professor,
+               'credit': row.credit, 'date_classroom': row.date_classroom,
+               }
+        courselist.append(dic)
+
+    return courselist
 
 
 def select_search_results(key_word):
-    cursor = connection.cursor()
-    query_string = "select * from course where course_no =" + key_word + " or course_name = " + key_word + " or professor=" + key_word
-    print(query_string)
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
-    posts = []
+    rows = Course.objects.filter(course_no=key_word) | Course.objects.filter(course_name=key_word) | Course.objects.filter(professor=key_word)
+    courselist = []
     for row in rows:
-        dic = {'course_id': row[0], 'course_no': row[1],
-               'semester': row[2], 'university': row[3],
-               'campus': row[4], 'classification': row[5],
-               'course_name': row[6], 'professor': row[7],
-               'credit': row[8], 'date_classroom': row[9]
+        dic = {'course_id': row.course_id, 'course_no': row.course_no,
+               'semester': row.semester, 'university': row.university,
+               'campus': row.campus, 'classification': row.classification,
+               'course_name': row.course_name, 'professor': row.professor,
+               'credit': row.credit, 'date_classroom': row.date_classroom,
                }
-        posts.append(dic)
+        courselist.append(dic)
 
-    return posts
+    return courselist
 
 
-def update_timetable(splist, userId):
-    cursor = connection.cursor()
-    rows = select_user_timetable(userId)
+def update_timetable(selected_courselist, user_id):
+    rows = Timetable.objects.filter(user_id=user_id)
+    row_idlist = []
+    for row in rows:
+        row_idlist.append(row.course_id.course_id)
 
-    for n in range(0, len(splist)):
-        if splist[n] not in rows:
-            query_string = "insert into timetable (user_id, course_id) values (" + str(userId) + ", " + str(splist[n]['course_id']) + ')'
-            cursor.execute(query_string)
+    selected_course_idlist = []
+    for sc in selected_courselist:
+        selected_course_idlist.append(sc['course_id'])
 
-    for n in range(0, len(rows)):
-        if rows[n] not in splist:
-            query_string = "delete from timetable where course_id=" + str(rows[n]['course_id']) + " and user_id=" + str(userId)
-            cursor.execute(query_string)
-    print(rows)
+    for scid in selected_course_idlist:
+        if scid not in row_idlist:
+            Timetable.objects.create(user_id=user(id=user_id), course_id=Course(course_id=scid))
+
+    for row_id in row_idlist:
+        if row_id not in selected_course_idlist:
+            Timetable.objects.filter(user_id=user_id, course_id=row_id).delete()
 
 
 def select_all_posts(course_id):
-    cursor = connection.cursor()
-    query_string = "select * from post where course_id=" + str(course_id)
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
+    rows = post.objects.filter(course_id=course_id).order_by('-post_id')
     posts = []
     for row in rows:
-        dic = {'post_id': row[0], 'user_id': row[1],
-               'course_id': row[2], 'title': row[3],
-               'password': row[4], 'content': row[5],
-               'post_type': row[6], 'is_closed': row[7],
-               'date': row[8]}
+        dic = {'post_id': row.post_id, 'user_id': row.user_id,
+               'course_id': row.course_id, 'title': row.title,
+               'password': row.password, 'content': row.content,
+               'post_type': row.post_type, 'is_closed': row.is_closed,
+               'upload_time': row.upload_time}
         posts.append(dic)
 
     return posts

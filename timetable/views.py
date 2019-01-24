@@ -241,10 +241,8 @@ class UpdateTimetableView(generic.View):
             save = request.POST.get('save')
 
         if kw != None and st != None:
-            kw = '"' + kw + '"'
             posts = dao.select_search_results_with_st(st, kw)
         elif kw != None and st == None:
-            kw = '"' + kw + '"'
             posts = dao.select_search_results(kw)
         else:
             posts = dao.select_all_courses()
