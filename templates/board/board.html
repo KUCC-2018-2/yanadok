@@ -115,10 +115,13 @@
                 <td>{{ post.post_id }}</td>
                 <td>{{ post.title }}</td>
                 <td>{{ userlist|get_index:forloop.counter0 }}</td>
-                <td>{{ post.date }}</td>
+                <td>{{ post.upload_time }}</td>
               </tr>
                 {% endfor %}
             </table>
+            <div>
+                <a href = 'new_post'>글쓰기</a>
+            </div>
         </div>
         <div id="pagination_container">
             <div id="pagination">

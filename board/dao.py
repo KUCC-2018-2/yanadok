@@ -1,5 +1,5 @@
 from django.db import connection
-
+from .models import Post
 
 def get_courselist(user_id):
     cursor = connection.cursor()
@@ -36,33 +36,36 @@ def get_userlist(posts):
 
 
 def select_all_posts(course_id):
-    cursor = connection.cursor()
-    query_string = "select * from post where course_id=" + str(course_id)
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
+    # cursor = connection.cursor()
+    # query_string = "select * from post where course_id=" + str(course_id)
+    # cursor.execute(query_string)
+    # rows = cursor.fetchall()
+    rows = Post.objects.filter(course_id=course_id).order_by('-post_id')
     posts = []
     for row in rows:
-        dic = {'post_id': row[0], 'user_id': row[1],
-               'course_id': row[2], 'title': row[3],
-               'password': row[4], 'content': row[5],
-               'post_type': row[6], 'is_closed': row[7],
-               'date': row[8]}
+        dic = {'post_id': row.post_id, 'user_id': row.user_id,
+               'course_id': row.course_id, 'title': row.title,
+               'password': row.password, 'content': row.content,
+               'post_type': row.post_type, 'is_closed': row.is_closed,
+               'upload_time': row.upload_time}
         posts.append(dic)
 
     return posts
 
+
 def select_study_posts(course_id):
-    cursor = connection.cursor()
-    query_string = "select * from post where post_type= '스터디/팀플' and course_id=" + str(course_id)
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
+    # cursor = connection.cursor()
+    # query_string = "select * from post where course_id=" + str(course_id)
+    # cursor.execute(query_string)
+    # rows = cursor.fetchall()
+    rows = Post.objects.filter(course_id=course_id).order_by('-post_id')
     posts = []
     for row in rows:
-        dic = {'post_id': row[0], 'user_id': row[1],
-               'course_id': row[2], 'title': row[3],
-               'password': row[4], 'content': row[5],
-               'post_type': row[6], 'is_closed': row[7],
-               'date': row[8]}
+        dic = {'post_id': row.post_id, 'user_id': row.user_id,
+               'course_id': row.course_id, 'title': row.title,
+               'password': row.password, 'content': row.content,
+               'post_type': row.post_type, 'is_closed': row.is_closed,
+               'upload_time': row.upload_time}
         posts.append(dic)
 
     return posts

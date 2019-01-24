@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from .forms import PostForm
 
@@ -106,18 +106,53 @@ class BoardRedirectionView(generic.View):
     def post(self, request):
         return HttpResponseRedirect(reverse('timetable:home'))
 
-def new_post(request):
-    template='board/new_post.html'
-    form = PostForm(request.POST or None)
 
+def new_post(request, course_id):
+    template = 'board/new_post.html'
+    form = PostForm(request.POST or None)
+    user_id = request.user.id
     if form.is_valid():
         form.save()
 
     else:
         form = PostForm()
 
-
     context = {
         'form': form,
+        'course_id': course_id,
+        'user_id': user_id,
     }
     return render(request, template, context)
+
+
+class NewPost(generic.View):
+
+    def get(self, request, course_id):
+        template = 'board/new_post.html'
+        form = PostForm(request.POST or None)
+        user_id = request.user.id
+
+        context = {
+            'form': form,
+            'course_id': course_id,
+            'user_id': user_id,
+        }
+        return render(request, template, context)
+
+    def post(self, request, course_id):
+        template = 'board/new_post.html'
+        form = PostForm(request.POST or None)
+        user_id = request.user.id
+        if form.is_valid():
+            form.save()
+            return redirect('board:board', course_id)
+        else:
+            form = PostForm()
+
+        context = {
+            'form': form,
+            'course_id': course_id,
+            'user_id': user_id,
+        }
+        return render(request, template, context)
+

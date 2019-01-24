@@ -20,10 +20,10 @@ class Course(models.Model):
 
 
 class Timetable(models.Model):
-    user = models.ForeignKey('user.User', models.DO_NOTHING, primary_key=True)
-    course = models.ForeignKey(Course, models.DO_NOTHING)
+    user_id = models.ForeignKey('user.User', models.DO_NOTHING, primary_key=True)
+    course_id = models.ForeignKey(Course, models.DO_NOTHING)
 
     class Meta:
         managed = False
         db_table = 'timetable'
-        unique_together = (('user', 'course'),)
+        unique_together = (('user_id', 'course_id'),)

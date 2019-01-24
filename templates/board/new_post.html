@@ -1,25 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method="post">
+{% csrf_token %}
+<form method="post" >
     {% csrf_token %}
-    {% for field in form %}
+    <input type="hidden" name="user_id" value="{{user_id}}" id="id_user_id">
+    <input type="hidden" name="course_id" value="{{course_id}}" id="id_course_id">
 
-      <p>
-        {{ field.label_tag }}<br>
-        {{ field }}
+    <p>
+    {{ form.post_type.label_tag }}<br>
+        {{ form.post_type }}
         {% for error in field.errors %}
           <p style="color: red">{{ error }}</p>
         {% endfor %}
-      </p>
-      {% endfor %}
-
-
-
-
-
-
+    </p>
+    <p>
+    {{ form.title.label_tag }}<br>
+        {{ form.title }}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+    </p>
+    <p>
+    {{ form.content.label_tag }}<br>
+        {{ form.content }}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+    </p>
 
     <button type="submit">Save</button>
 </form>
+<p>
+    <a href="{% url 'board:board' course_id %}">Cancel</a>
+</p>
 {% endblock %}
