@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views import generic
 
 from .models import Post
@@ -136,7 +136,7 @@ class NewPost(generic.View):
 
 class EditPost(generic.View):
 
-    def get(self, request, course_id, post_id):
+    def get(self, request, post_id):
         template = 'board/new_post.html'
         posting = Post.objects.get(post_id=post_id)
         if posting.user_id != request.user:
@@ -144,16 +144,17 @@ class EditPost(generic.View):
         form = PostForm(instance=posting)
         return render(request, template, {'form': form, })
 
-    def post(self, request, course_id, post_id):
+    def post(self, request, post_id):
         template = 'board/new_post.html'
         posting = Post.objects.get(post_id=post_id)
+        course_id = posting.course_id.course_id
         form = PostForm(request.POST, instance=posting)
         if form.is_valid():
             post = form.save(commit=False)
             post.user_id = request.user
             post.course_id = course.objects.get(course_id=course_id)
             post.save()
-            return redirect('board:board', course_id)
+            return redirect('board:post', post_id)
         else:
             form = PostForm(instance=posting)
         return render(request, template, {'form': form, })

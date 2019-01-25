@@ -70,6 +70,11 @@
             <p>좋아요 {{ like_num }}개</p>
               </div>
           </div>
+      {% if post.user_id == user %}
+      <div id="post_edit">
+        <a href="{% url 'board:edit_post' post.post_id %}">글 수정</a>
+      </div>
+      {% endif %}
       <div id="post_list">
         <a href="{% url 'board:board' course_id %}">글목록</a>
       </div>
