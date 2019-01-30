@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Profile</title>
+{% endblock %}
+
+{% block content %}
+<div class = "container">
+    <h1>Profile</h1>
+    <form method="post">
+        {% csrf_token %}
+
+
+
+        <table>
+            <tr>
+                <td>Username: </td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.first_name.label_tag }}</td>
+                <td>{{ form.first_name }}</td>
+                {% for error in form.first_name.errors %}
+                <td style="color: red">{{ error }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>{{ form.last_name.label_tag }}</td>
+                <td>{{ form.last_name }}</td>
+                {% for error in form.last_name.errors %}
+                <td style="color: red">{{ error }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>{{ form.nickname.label_tag }}</td>
+                <td>{{ form.nickname }}</td>
+                {% for error in form.nickname.errors %}
+                <td style="color: red">{{ error }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>{{ form.email.label_tag }}</td>
+                <td>{{ form.email }}</td>
+                {% for error in form.email.errors %}
+                <td style="color: red">{{ error }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>University: </td>
+                <td>{{ user.university }}</td>
+            </tr>
+        </table>
+
+
+
+
+        <button type="submit">Submit</button>
+    </form>
+    <br>
+
+
+</div>
+
+
+
+{% endblock %}

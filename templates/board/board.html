@@ -1,12 +1,12 @@
+{% extends 'base.html' %}
+
 {% load staticfiles %}
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
     <title></title>
-  </head>
-  <body>
+{% endblock %}
+
+{% block nav %}
 
   <div id="wrapper">
   {% if user.is_authenticated %}
@@ -64,17 +64,6 @@
     })
   });
     </script>
-
-    <div id="nav">
-      <div class="wrap">
-        <div id="logo">
-          <p>  logo </p>
-        </div>
-        <div id="logout">
-          <p><a href="{% url 'logout' %}">logout</a></p>
-        </div>
-      </div>
-    </div>
     <div id="board_container">
         <div id="board_nav">
         <div class="dropdown_container">
@@ -149,5 +138,4 @@
     <a href="{% url 'signup' %}">signup</a>
   {% endif %}
         </div>
-  </body>
-</html>
+{% endblock %}

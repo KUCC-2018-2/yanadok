@@ -9,8 +9,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from .models import User
+from .forms import CustomUserChangeForm
 from django.core.mail import EmailMessage
-
 
 def signup(request):
     if request.method == 'POST':
@@ -62,3 +62,22 @@ def activate(request, uidb64, token):
         return redirect('home')
     else:
         return HttpResponse('Activation link is invalid!')
+
+
+def view_profile(request):
+    args = {'user': request.user}
+    return render(request, 'user/profile.html', args)
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/user/profile')
+
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+        args = {'form': form, 'user':request.user}
+        return render(request, 'user/edit_profile.html', args)

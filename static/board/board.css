@@ -62,9 +62,12 @@ font-family: inherit;
 margin: 0;
 }
 
+/*navigation 이상해지는 부분*/
+/*
 .navbar a:hover, .dropdown_container:hover .dropbtn {
 background-color: rgb(77, 78, 77);
 }
+*/
 
 .dropdown-content {
 display: none;

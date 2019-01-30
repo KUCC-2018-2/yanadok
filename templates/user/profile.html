@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Profile</title>
+{% endblock %}
+
+{% block nav %}
+<div class = "container">
+    <h1>Profile</h1>
+    <p>Username: {{ user }}</p>
+    <p>First name: {{ user.first_name }}</p>
+    <p>Last name: {{ user.last_name }}</p>
+    <p>Nick name: {{ user.nickname }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>University: {{user.university }} </p>
+    <a href="edit">edit</a>
+</div>
+
+
+
+{% endblock %}
