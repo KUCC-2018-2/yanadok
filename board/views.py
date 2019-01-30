@@ -105,12 +105,8 @@ class BoardView(generic.View):
         return HttpResponse(template.render(context, request))
 
 
-class BoardRedirectionView(generic.View):
-    def get(self):
-        return HttpResponseRedirect(reverse('timetable:home'))
-
-    def post(self):
-        return HttpResponseRedirect(reverse('timetable:home'))
+def boardRedirection(request):
+    return HttpResponseRedirect(reverse('timetable:home'))
 
 
 class NewPost(generic.View):

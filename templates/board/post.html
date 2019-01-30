@@ -1,12 +1,10 @@
-{% load staticfiles %}
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% extends 'base.html' %}
+ {% block head %}
+    {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'board/post.css' %}?after">
     <title></title>
-  </head>
-  <body>
+{% endblock %}
+{% block nav %}
   <script>
       $(document).ready(function(){
       $(document).on('click', '#like_btn', function(){
@@ -42,16 +40,6 @@
     })
   });
     </script>
-    <div id="nav">
-      <div class="wrap">
-        <div id="logo">
-          <p>  logo </p>
-        </div>
-        <div id="logout">
-          <p><a href="{% url 'logout' %}">logout</a></p>
-        </div>
-      </div>
-    </div>
     <div id="post_container">
       {% if post %}
       <div id="title">
@@ -82,5 +70,4 @@
         <p>해당 게시글이 존재하지 않습니다.</p>
         {% endif %}
     </div>
-  </body>
-</html>
+{% endblock %}
