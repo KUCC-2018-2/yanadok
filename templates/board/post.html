@@ -1,32 +1,28 @@
-{% extends 'base.html' %}
- {% block head %}
-    {% load staticfiles %}
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'board/post.css' %}?after">
     <title></title>
-{% endblock %}
-{% block nav %}
+  </head>
+  <body>
   <script>
       $(document).ready(function(){
       $(document).on('click', '#like_btn', function(){
         var like = $('#like_btn').attr('class');
-
         $.ajax({
             type: "POST",
             url: "{% url 'board:post_like' post.post_id %}",
             data: {'like': like,
             'csrfmiddlewaretoken': '{{ csrf_token }}', },
-
             success: function(response) {
-
               $dom = $(document.createElement("html"));
               $dom[0].innerHTML = response;
               $body = $dom.find("#like_btn_wrapper")[0];
-
               $curDom = $('html');
               $div = $curDom.find("#like_container")[0];
-
               $($div).html($body);
-
               if (like == 'like_active') {
                 $('#like_btn').removeClass('like_active');
                 $('#like_btn').addClass('like');
@@ -40,6 +36,16 @@
     })
   });
     </script>
+    <div id="nav">
+      <div class="wrap">
+        <div id="logo">
+          <p>  logo </p>
+        </div>
+        <div id="logout">
+          <p><a href="{% url 'logout' %}">logout</a></p>
+        </div>
+      </div>
+    </div>
     <div id="post_container">
       {% if post %}
       <div id="title">
@@ -70,4 +76,5 @@
         <p>해당 게시글이 존재하지 않습니다.</p>
         {% endif %}
     </div>
-{% endblock %}
+  </body>
+</html>

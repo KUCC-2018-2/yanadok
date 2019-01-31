@@ -1,37 +1,42 @@
-{% extends 'base.html' %}
-
-{% block head %}
-    {% load staticfiles %}
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'timetable/timetable.css' %}?after">
     <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
     <title>timetable</title>
-{% endblock %}
-
-
-
-{% block nav %}
+  </head>
+  <body>
     <div id="wrapper">
+    {% block content %}
     {% csrf_token %}
     {% if user.is_authenticated %}
     <script>
       $(document).ready(function(){
       $(document).on('click', '.courses_a', function(){
         var id = $(this).attr('id');
-
         $.ajax({
             type: "POST",
             url: '',
             data: {'id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}', },
-
             success: function(response) {
-
             }
          })
     })
   });
     </script>
     {% load filters %}
-
+    <div id="nav">
+      <div class="wrap">
+        <div id="logo">
+          <p>  logo </p>
+        </div>
+        <div id="logout">
+          <p><a href="{% url 'logout' %}">logout</a></p>
+        </div>
+      </div>
+    </div>
     <div id="timetable_container">
       <div class="wrap">
         <div id="timetable">
@@ -230,13 +235,15 @@
       </div>
     </div>
 
-  {% else %}
-
+        {% else %}
     <p>Welcome to Yanadok</p>
     <a href="{% url 'login' %}">login</a> |
     <a href="{% url 'user:signup' %}">signup</a> |
     <a href="{% url 'password_reset' %}">reset password</a>
-
   {% endif %}
+  {% endblock %}
         </div>
-{% endblock %}
+  </body>
+
+
+</html>
