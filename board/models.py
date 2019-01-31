@@ -30,3 +30,16 @@ class PostLike(models.Model):
         managed = False
         db_table = 'post_like'
         unique_together = (('user_id', 'post_id'),)
+
+
+class Comment(models.Model):
+
+    comment_id = models.AutoField(primary_key=True)
+    post_id = models.ForeignKey('board.Post', models.DO_NOTHING, db_column='post_id', blank=True, null=True)
+    user_id = models.ForeignKey('user.User', models.DO_NOTHING, db_column='user_id', blank=True, null=True)
+    content = models.TextField()
+    upload_time = models.DateTimeField(default=timezone.now())
+
+    class Meta:
+        managed = True
+        db_table = 'comment'

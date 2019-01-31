@@ -1,12 +1,12 @@
-{% extends 'base.html' %}
-
 {% load staticfiles %}
-    {% block head %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
     <title></title>
-{% endblock %}
-
-{% block nav %}
+  </head>
+  <body>
 
   <div id="wrapper">
   {% if user.is_authenticated %}
@@ -16,54 +16,55 @@
       $(document).on('click', '.board_tab_a', function(){
         var post_type = $(this).attr('id');
         var course_id = {{ course_id }};
-
         $.ajax({
             type: "POST",
             url: '',
             data: {'course_id': course_id, 'post_type': post_type,
             'csrfmiddlewaretoken': '{{ csrf_token }}', },
-
             success: function(response) {
                 $dom = $(document.createElement("html"));
                 $dom[0].innerHTML = response;
                 $body = $dom.find("#post_list_container table")[0];
-
                 $curDom = $('html');
                 $div = $curDom.find("#post_list_container")[0];
-
                 $($div).html($body);
                 $('.board_tab_a').removeClass('active_tab');
                 $('#' + post_type).addClass('active_tab');
             }
          })
     })
-
     $(document).on('click', '.page_num', function(){
         var page_num = $(this).attr('id');
         var course_id = {{ course_id }};
         var post_type = $('.active_tab').attr('id')
-
-
         $.ajax({
             type: "POST",
             url: '',
             data: {'course_id': course_id, 'page_num': page_num, 'post_type': post_type,
             'csrfmiddlewaretoken': '{{ csrf_token }}', },
-
             success: function(response) {
                 $dom = $(document.createElement("html"));
                 $dom[0].innerHTML = response;
                 $body = $dom.find("#post_list_container table")[0];
-
                 $curDom = $('html');
                 $div = $curDom.find("#post_list_container")[0];
-
                 $($div).html($body);
             }
          })
     })
   });
     </script>
+
+    <div id="nav">
+      <div class="wrap">
+        <div id="logo">
+          <p>  logo </p>
+        </div>
+        <div id="logout">
+          <p><a href="{% url 'logout' %}">logout</a></p>
+        </div>
+      </div>
+    </div>
     <div id="board_container">
         <div id="board_nav">
         <div class="dropdown_container">
@@ -138,4 +139,5 @@
     <a href="{% url 'signup' %}">signup</a>
   {% endif %}
         </div>
-{% endblock %}
+  </body>
+</html>

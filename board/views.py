@@ -6,10 +6,10 @@ from django.template import loader
 from django.urls import reverse
 from django.views import generic
 
-from .models import Post
+from timetable.models import Course
+from .models import Post, Comment, PostLike
 from django.apps import apps
-from .forms import PostForm
-
+from .forms import PostForm, CommentForm, PostLikeForm
 
 from . import dao
 
@@ -114,7 +114,7 @@ class NewPost(generic.View):
     def get(self, request, course_id):
         template = 'board/new_post.html'
         form = PostForm()
-        return render(request, template, {'form': form, })
+        return HttpResponse(template.render({'form': form, }, request))
 
     def post(self, request, course_id):
         template = 'board/new_post.html'
@@ -127,7 +127,7 @@ class NewPost(generic.View):
             return redirect('board:board', course_id)
         else:
             form = PostForm()
-        return render(request, template, {'form': form, })
+            return HttpResponse(template.render({'form': form, }, request))
 
 
 class EditPost(generic.View):
@@ -138,7 +138,7 @@ class EditPost(generic.View):
         if posting.user_id != request.user:
             return HttpResponse('잘못된 접근입니다.')
         form = PostForm(instance=posting)
-        return render(request, template, {'form': form, })
+        return HttpResponse(template.render({'form': form, }, request))
 
     def post(self, request, post_id):
         template = 'board/new_post.html'
@@ -153,65 +153,74 @@ class EditPost(generic.View):
             return redirect('board:post', post_id)
         else:
             form = PostForm(instance=posting)
-        return render(request, template, {'form': form, })
+            return HttpResponse(template.render({'form': form, }, request))
 
 
 class PostView(generic.View):
     def get(self, request, post_id):
         template = loader.get_template('board/post.html')
-
-        post = dao.select_post(post_id)
-        like_num = dao.get_like_num(post_id)
-        course_id = post.get('course_id').course_id
-        # print(course_id)
-
-        user_id = request.user.id
-        like_active = dao.like_active(post_id, user_id)
-        if like_active == True:
-            message = '좋아요 취소'
-            like_class = 'like_active'
-        else:
-            message ='좋아요'
-            like_class = 'like'
+        form = CommentForm()
+        like_form = PostLikeForm()
+        comments = Comment.objects.filter(post_id=post_id)
+        post = Post.objects.get(post_id=post_id)
+        current_course = Course.objects.get(course_id=post.course_id.course_id)
+        post_like = PostLike.objects.filter(post_id=post_id)
+        check = PostLike.objects.filter(user_id=request.user.id).exists()
 
         context = {
+            'form': form,
+            'like_form': like_form,
+            'comments': comments,
             'post': post,
-            'like_num': like_num,
-            'message': message,
-            'like_class': like_class,
-            'course_id': course_id,
+            'course': current_course,
+            'post_like': post_like,
+            'check': check,
         }
-
         return HttpResponse(template.render(context, request))
-
 
     def post(self, request, post_id):
         template = loader.get_template('board/post.html')
+        form = CommentForm(request.POST or None)
+        like_form = PostLikeForm(request.POST or None)
+        comments = Comment.objects.filter(post_id=post_id)
+        post = Post.objects.get(post_id=post_id)
+        current_course = Course.objects.get(course_id=post.course_id.course_id)
+        post_like = PostLike.objects.filter(post_id=post_id)
+        check = PostLike.objects.filter(user_id=request.user.id).exists()
 
-        if request.method == "POST":
-            like = request.POST.get('like')
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.user_id = request.user
+            new_comment.post_id = Post.objects.get(post_id=post_id)
+            new_comment.save()
+            return redirect('board:post', post_id)
 
-        user_id = request.user.id
-        if like == 'like_active':
-            dao.delete_like(post_id, user_id)
-            message = '좋아요'
-            like_class = 'like'
+        elif like_form.is_valid():
+
+            if check:
+                pass
+                old_like = PostLike.objects.get(user_id=request.user.id)
+                old_like.delete()
+            else:
+                new_like = like_form.save(commit=False)
+                new_like.user_id = request.user
+                new_like.post_id = Post.objects.get(post_id=post_id)
+                new_like.save()
+            return redirect('board:post', post_id)
+
         else:
-            dao.insert_like(post_id, user_id)
-            message = '좋아요 취소'
-            like_class = 'like_active'
+            form = CommentForm()
+            context = {
+                'form': form,
+                'like_form': like_form,
+                'comments': comments,
+                'post': post,
+                'course': current_course,
+                'post_like': post_like,
+                'check': check,
+            }
+            return HttpResponse(template.render(context, request))
 
-        post = dao.select_post(post_id)
-        course_id = post.get('course_id').course_id
-        like_num = dao.get_like_num(post_id)
 
-        context = {
-            'post': post,
-            'like_num': like_num,
-            'message': message,
-            'like_class': like_class,
-            'course_id': course_id,
-        }
 
-        return HttpResponse(template.render(context, request))
 
