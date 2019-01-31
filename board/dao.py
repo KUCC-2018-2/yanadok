@@ -1,5 +1,5 @@
 # from django.db import connection
-from .models import Post, PostLike
+from .models import Post, PostLike, Comment
 from django.apps import apps
 
 
@@ -88,13 +88,32 @@ def get_like_num(post_id):
 
 def insert_like(post_id, user_id):
     if PostLike is not None and user_id is not None:
-        user = apps.get_model('user', 'User')
         PostLike.objects.create(post_id=Post(post_id=post_id), user_id=user(id=user_id))
 
 
 def delete_like(post_id, user_id):
-    user = apps.get_model('user', 'User')
     PostLike.objects.filter(post_id=Post(post_id=post_id)).filter(user_id=user(id=user_id)).delete()
 
 
+def insert_comment(post_id, user_id, comment_content):
+    Comment.objects.create(post_id=Post(post_id=post_id), user_id=user(id=user_id), comment_content=comment_content)
+
+
+def select_all_comments(post_id):
+    rows = Comment.objects.filter(post_id=Post(post_id=post_id)).order_by('comment_id')
+    comments = []
+    for row in rows:
+        dic = {'comment_id': row.comment_id, 'comment_content': row.comment_content,
+               'post_id': row.post_id, 'user_id': row.user_id,
+               'upload_time': row.upload_time, }
+        comments.append(dic)
+
+    return comments
+
+def delete_comment(comment_id, user_id):
+    rows = Comment.objects.filter(user_id=user(id=user_id)).order_by('comment_id')
+
+    for row in rows:
+        if row.comment_id == int(comment_id):
+            Comment.objects.filter(comment_id=comment_id).delete()
 

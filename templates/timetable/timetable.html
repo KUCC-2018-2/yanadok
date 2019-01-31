@@ -12,20 +12,6 @@
     {% block content %}
     {% csrf_token %}
     {% if user.is_authenticated %}
-    <script>
-      $(document).ready(function(){
-      $(document).on('click', '.courses_a', function(){
-        var id = $(this).attr('id');
-        $.ajax({
-            type: "POST",
-            url: '',
-            data: {'id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}', },
-            success: function(response) {
-            }
-         })
-    })
-  });
-    </script>
     {% load filters %}
     <div id="nav">
       <div class="wrap">

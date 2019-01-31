@@ -183,12 +183,12 @@ class TimetableView(generic.View):
 
         return HttpResponse(template.render(context, request))
 
-    def post(self, request):
-
-        if request.method == "POST":
-            course_id = request.POST.get('id')
-
-        return HttpResponseRedirect(reverse('board:board', args=(course_id,)))
+    # def post(self, request):
+    #
+    #     if request.method == "POST":
+    #         course_id = request.POST.get('id')
+    #
+    #     return HttpResponseRedirect(reverse('board:board', args=(course_id,)))
 
 
 #시간표 수정

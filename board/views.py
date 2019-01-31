@@ -8,12 +8,13 @@ from django.views import generic
 
 from .models import Post
 from django.apps import apps
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 
 from . import dao
 
 course = apps.get_model('timetable', 'Course')
+user = apps.get_model('user', 'User')
 
 class BoardView(generic.View):
 
@@ -163,7 +164,6 @@ class PostView(generic.View):
         post = dao.select_post(post_id)
         like_num = dao.get_like_num(post_id)
         course_id = post.get('course_id').course_id
-        # print(course_id)
 
         user_id = request.user.id
         like_active = dao.like_active(post_id, user_id)
@@ -174,12 +174,16 @@ class PostView(generic.View):
             message ='좋아요'
             like_class = 'like'
 
+        comment_list = dao.select_all_comments(post_id)
+
         context = {
+            'user_id': user.objects.filter(id=user_id)[0],
             'post': post,
             'like_num': like_num,
             'message': message,
             'like_class': like_class,
             'course_id': course_id,
+            'comment_list': comment_list,
         }
 
         return HttpResponse(template.render(context, request))
@@ -187,30 +191,45 @@ class PostView(generic.View):
 
     def post(self, request, post_id):
         template = loader.get_template('board/post.html')
+        message = '';
+        like_class = '';
 
         if request.method == "POST":
             like = request.POST.get('like')
+            message = request.POST.get('message')
+            comment_content = request.POST.get('comment_content')
+            comment_action = request.POST.get('comment_action')
+            index = request.POST.get('index')
 
         user_id = request.user.id
         if like == 'like_active':
             dao.delete_like(post_id, user_id)
             message = '좋아요'
             like_class = 'like'
-        else:
+        elif like == 'like':
             dao.insert_like(post_id, user_id)
             message = '좋아요 취소'
             like_class = 'like_active'
 
+        if comment_action == 'insert':
+            dao.insert_comment(post_id, user_id, comment_content)
+        elif comment_action == 'delete':
+            comment_list = dao.select_all_comments(post_id)
+            dao.delete_comment(comment_list[int(index)].get('comment_id'), user_id)
+
         post = dao.select_post(post_id)
         course_id = post.get('course_id').course_id
         like_num = dao.get_like_num(post_id)
+        comment_list = dao.select_all_comments(post_id)
 
         context = {
+            'user_id': user.objects.filter(id=user_id)[0],
             'post': post,
             'like_num': like_num,
             'message': message,
             'like_class': like_class,
             'course_id': course_id,
+            'comment_list': comment_list,
         }
 
         return HttpResponse(template.render(context, request))

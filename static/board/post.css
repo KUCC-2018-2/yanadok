@@ -33,3 +33,8 @@ body {
   width: 100px;
   height: 50px;
 }
+
+#comment_input {
+  width: 200px;
+  height: 100px;
+}

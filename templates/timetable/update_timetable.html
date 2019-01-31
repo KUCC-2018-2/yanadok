@@ -28,7 +28,7 @@
       });
 
 
-      $(document).on('click', '#search', function(){
+      $(document).on('click', '#search_btn', function(){
         key_word = $("#search_input").val().toUpperCase();
 
         $.ajax({
@@ -288,7 +288,7 @@
                 <input type="radio" name="search_type" value="professor" id="professor"> 담당교수
             </div>
             <input type="text" name="검색어 입력" id="search_input">
-            <input type="submit" value="검색" id="search">
+            <input type="submit" value="검색" id="search_btn">
           </div>
           <div id="search_result_table">
           <table>

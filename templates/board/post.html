@@ -7,6 +7,7 @@
     <title></title>
   </head>
   <body>
+    {% load filters %}
   <script>
       $(document).ready(function(){
       $(document).on('click', '#like_btn', function(){
@@ -31,6 +32,46 @@
                 $('#like_btn').removeClass('like');
                 $('#like_btn').addClass('like_active');
               }
+            }
+         })
+    })
+
+    $(document).on('click', '#submit_comment_btn', function(){
+        var comment_content = $('#comment_input').val();
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'comment_content': comment_content, 'comment_action': 'insert',
+            'csrfmiddlewaretoken': '{{ csrf_token }}',},
+
+            success: function(response) {
+              $dom = $(document.createElement("html"));
+              $dom[0].innerHTML = response;
+              $body = $dom.find("#comment_wrapper");
+              $curDom = $('html');
+              $div = $curDom.find("#comment_container");
+              $($div).html($body);
+            }
+         })
+    })
+
+    $(document).on('click', '.delete_comment_btn', function(){
+        var index = $('html').find(".delete_comment_btn").index(this);
+
+        $.ajax({
+            type: "POST",
+            url: '',
+            data: {'comment_action': 'delete', 'index': index,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',},
+
+            success: function(response) {
+              $dom = $(document.createElement("html"));
+              $dom[0].innerHTML = response;
+              $body = $dom.find("#comment_wrapper");
+              $curDom = $('html');
+              $div = $curDom.find("#comment_container");
+              $($div).html($body);
             }
          })
     })
@@ -76,5 +117,29 @@
         <p>해당 게시글이 존재하지 않습니다.</p>
         {% endif %}
     </div>
+  <div id="comment_container">
+    <div id="comment_wrapper">
+        <table id="comment_table">
+  {% for comment in comment_list %}
+    <tr>
+        <td><strong>{{comment.user_id}} :</strong></td>
+        <td> {{comment.comment_content}}</td>
+        <td><small>{{comment.upload_time}}</small></td>
+      {% if comment.user_id == user_id %}
+      <td><button type="submit" class="delete_comment_btn">댓글 삭제</button></td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+
+        <div id="comment_input_container">
+      <input type="text" name="comment" id="comment_input">
+    <button type="submit" id="submit_comment_btn">댓글 전송</button>
+  </div>
+    </div>
+  </div>
+
+
+
   </body>
 </html>
