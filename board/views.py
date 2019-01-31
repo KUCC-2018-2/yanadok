@@ -133,7 +133,7 @@ class NewPost(generic.View):
 class EditPost(generic.View):
 
     def get(self, request, post_id):
-        template = 'board/new_post.html'
+        template = loader.get_template('board/new_post.html')
         posting = Post.objects.get(post_id=post_id)
         if posting.user_id != request.user:
             return HttpResponse('잘못된 접근입니다.')
@@ -141,7 +141,7 @@ class EditPost(generic.View):
         return HttpResponse(template.render({'form': form, }, request))
 
     def post(self, request, post_id):
-        template = 'board/new_post.html'
+        template = loader.get_template('board/new_post.html')
         posting = Post.objects.get(post_id=post_id)
         course_id = posting.course_id.course_id
         form = PostForm(request.POST, instance=posting)
