@@ -7,8 +7,13 @@
     <title></title>
   </head>
   <body>
+
   {% load filters %}
+  {% load el_pagination_tags %}
+
   <div id="wrapper">
+       {% block content %}
+    {% csrf_token %}
   {% if user.is_authenticated %}
   {% load filters %}
       <script>
@@ -33,17 +38,19 @@
             }
          })
     })
-    $(document).on('click', '.page_num', function(){
-        var page_num = $(this).attr('id');
+   $(document).on('click', '#search_btn', function(){
+        var key_word = $("#search_input").val();
+        var post_type = $(this).attr('id');
         var course_id = {{ course_id }};
-        var post_type = $('.active_tab').attr('id')
+
         $.ajax({
             type: "POST",
             url: '',
-            data: {'course_id': course_id, 'page_num': page_num, 'post_type': post_type,
-            'csrfmiddlewaretoken': '{{ csrf_token }}', },
+            data: {'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'kw': key_word, 'course_id': course_id, 'post_type': post_type,},
+
             success: function(response) {
-                $dom = $(document.createElement("html"));
+              $dom = $(document.createElement("html"));
                 $dom[0].innerHTML = response;
                 $body = $dom.find("#post_list_container table")[0];
                 $curDom = $('html');
@@ -84,9 +91,6 @@
               <a class="board_tab_a active_tab" href="" id="전체">전체</a>
             </li>
             <li class="board_tab_li">
-                  <a class="board_tab_a" id="공지">공지</a>
-            </li>
-            <li class="board_tab_li">
                   <a class="board_tab_a" id="스터디팀플">스터디/팀플</a>
             </li>
           </ul>
@@ -100,16 +104,31 @@
                 <td>작성자</td>
                 <td>작성시간</td>
               </tr>
-                {% for post in current_postlist %}
+                {% for notice in notice_posts %}
+              <tr class="rows">
+                <td><p>공지</p></td>
+                <td>
+                    <form target="" method="post" name="1">
+                {% csrf_token %}
+                <a href="{% url 'board:post' post.post_id %}"class="post_a">{{ notice.title }}</a>
+                </form>
+                </td>
+                  <td>{{ notice.user_id }}</td>
+                <td>{{ notice.upload_time }}</td>
+              </tr>
+                {% endfor %}
+
+                {% paginate posts %}
+                {% for post in posts %}
               <tr class="rows">
                 <td>{{ post.post_id }}</td>
                 <td>
                     <form target="" method="post" name="1">
                 {% csrf_token %}
-                <a href="{% url 'board:post' post.post_id %}"class="post_a" id={{ post.post_id }}>{{ post.title }}</a>
+                <a href="{% url 'board:post' post.post_id %}"class="post_a">{{ post.title }}</a>
                 </form>
                 </td>
-                <td>{{ userlist|get_index:forloop.counter0 }}</td>
+                  <td>{{ post.user_id }}</td>
                 <td>{{ post.upload_time }}</td>
               </tr>
                 {% endfor %}
@@ -118,19 +137,20 @@
                 <a href = 'new_post'>글쓰기</a>
             </div>
         </div>
+
         <div id="pagination_container">
             <div id="pagination">
-              <a href="#">&laquo;</a>
-                {% for n in page_range %}
-              <a href="#" class="page_num" id="{{ n }}">{{ n }}</a>
-                {% endfor %}
-              <a href="#">&raquo;</a>
+                {% get_pages %}
+                {{ pages|length }}
+                {% if pages.paginated %}
+                {{ pages.get_rendered }}
+                {% endif %}
           </div>
         </div>
 
         <div id="search_container">
           <input type="text" name="검색어 입력" id="search_input" placeholder="글제목으로 검색">
-          <input type="submit" value="검색" id="search">
+          <input type="submit" value="검색" id="search_btn">
         </div>
     </div>
         {% else %}
@@ -138,6 +158,7 @@
     <a href="{% url 'login' %}">login</a> |
     <a href="{% url 'user:signup' %}">signup</a>
   {% endif %}
+    {% endblock %}
         </div>
   </body>
 </html>

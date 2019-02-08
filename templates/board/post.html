@@ -38,6 +38,7 @@
 
     $(document).on('click', '#submit_comment_btn', function(){
         var comment_content = $('#comment_input').val();
+        console.log("hi");
 
         $.ajax({
             type: "POST",

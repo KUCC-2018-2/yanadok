@@ -26,14 +26,6 @@ def get_course_name(course_id):
     return rows[0].course_name
 
 
-def get_userlist(posts):
-    userlist = []
-    for post in posts:
-        userlist.append(post.get('user_id'))
-
-    return userlist
-
-
 def select_all_posts(course_id):
     rows = Post.objects.filter(course_id=course_id).order_by('-post_id')
     posts = []
@@ -48,8 +40,38 @@ def select_all_posts(course_id):
     return posts
 
 
+def select_notice_posts(course_id):
+    rows = Post.objects.filter(course_id=course_id).order_by('-post_id')
+    posts = []
+    for row in rows:
+        like_row = PostLike.objects.filter(post_id=row.post_id)
+        if len(like_row) >= 10:
+            dic = {'post_id': row.post_id, 'user_id': row.user_id,
+                   'course_id': row.course_id, 'title': row.title,
+                   'password': row.password, 'content': row.content,
+                   'post_type': row.post_type, 'is_closed': row.is_closed,
+                   'upload_time': row.upload_time}
+            posts.append(dic)
+
+    return posts
+
+
 def select_study_posts(course_id):
     rows = Post.objects.filter(course_id=course_id).filter(post_type='스터디/팀플').order_by('-post_id')
+    posts = []
+    for row in rows:
+        dic = {'post_id': row.post_id, 'user_id': row.user_id,
+               'course_id': row.course_id, 'title': row.title,
+               'password': row.password, 'content': row.content,
+               'post_type': row.post_type, 'is_closed': row.is_closed,
+               'upload_time': row.upload_time}
+        posts.append(dic)
+
+    return posts
+
+
+def get_search_results(course_id, key_word):
+    rows = Post.objects.filter(course_id=course_id).filter(title__icontains=key_word).order_by('-post_id')
     posts = []
     for row in rows:
         dic = {'post_id': row.post_id, 'user_id': row.user_id,

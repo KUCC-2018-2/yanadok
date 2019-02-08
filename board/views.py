@@ -10,11 +10,15 @@ from .models import Post
 from django.apps import apps
 from .forms import PostForm, CommentForm
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
+
 
 from . import dao
 
 course = apps.get_model('timetable', 'Course')
 user = apps.get_model('user', 'User')
+
 
 class BoardView(generic.View):
 
@@ -25,33 +29,20 @@ class BoardView(generic.View):
         posts = dao.select_all_posts(course_id)
 
         courselist = dao.get_courselist(user_id)
-        # print(user_id)
         course_name = dao.get_course_name(course_id)
         course_idlist = []
         for course in courselist:
             course_idlist.append(course['course_id'])
 
-        page_len = int(len(posts) / 10) + 1
-        page_range = range(1, page_len+1)
-
-        page_num = 1
-        current_postlist = []
-
-        for n in range((page_num  - 1) * 10, page_num * 10):
-            if n < len(posts):
-                current_postlist.append(posts[n])
-
-        userlist = dao.get_userlist(current_postlist)
+        notice_posts = dao.select_notice_posts(course_id)
 
         context = {
             'course_id': course_id,
             'course_name': course_name,
             'posts': posts,
-            'current_postlist': current_postlist,
-            'userlist': userlist,
+            'notice_posts': notice_posts,
             'courselist': courselist,
             'course_idlist': course_idlist,
-            'page_range': page_range,
         }
 
         return HttpResponse(template.render(context, request))
@@ -63,6 +54,7 @@ class BoardView(generic.View):
         if request.method == "POST":
             course_id = request.POST.get('course_id')
             post_type = request.POST.get('post_type')
+            key_word = request.POST.get('kw')
 
         course_name = dao.get_course_name(course_id)
 
@@ -73,33 +65,28 @@ class BoardView(generic.View):
         else:
             posts = dao.select_all_posts(course_id)
 
+        if key_word != None:
+            results = []
+            for post in posts:
+                if key_word in post['title']:
+                    results.append(post)
+            posts = results
+
         courselist = dao.get_courselist(userId)
         course_idlist = []
 
         for course in courselist:
             course_idlist.append(course['course_id'])
 
-        page_len = int(len(posts) / 10) + 1
-        page_range = range(1, page_len + 1)
-
-        page_num = 1
-        current_postlist = []
-
-        for n in range((page_num - 1) * 10, page_num * 10):
-            if n < len(posts):
-                current_postlist.append(posts[n])
-
-        userlist = dao.get_userlist(current_postlist)
+        notice_posts = dao.select_notice_posts(course_id)
 
         context = {
             'course_id': course_id,
             'course_name': course_name,
             'posts': posts,
-            'current_postlist': current_postlist,
-            'userlist': userlist,
+            'notice_posts': notice_posts,
             'courselist': courselist,
             'course_idlist': course_idlist,
-            'page_range': page_range,
             'post_type': post_type,
         }
 
@@ -188,11 +175,10 @@ class PostView(generic.View):
 
         return HttpResponse(template.render(context, request))
 
-
     def post(self, request, post_id):
         template = loader.get_template('board/post.html')
-        message = '';
-        like_class = '';
+        message = ''
+        like_class = ''
 
         if request.method == "POST":
             like = request.POST.get('like')
