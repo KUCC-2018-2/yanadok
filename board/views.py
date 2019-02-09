@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,9 +8,8 @@ from django.views import generic
 
 from .models import Post
 from django.apps import apps
-from .forms import PostForm, CommentForm
+from .forms import PostForm
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 
 

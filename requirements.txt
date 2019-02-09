@@ -1,2 +1,4 @@
 Django==2.1.4
+django-el-pagination==3.2.4
+mysqlclient==1.4.2
 pytz==2018.7
