@@ -155,13 +155,6 @@ class DeletePost(generic.View):
         return HttpResponseRedirect(reverse('board:board', args=(course_id,)))
 
 
-
-
-
-
-
-
-
 class PostView(generic.View):
     def get(self, request, post_id):
         template = loader.get_template('board/post.html')
@@ -205,6 +198,7 @@ class PostView(generic.View):
             comment_action = request.POST.get('comment_action')
             index = request.POST.get('index')
 
+
         user_id = request.user.id
         if like == 'like_active':
             dao.delete_like(post_id, user_id)
@@ -218,8 +212,11 @@ class PostView(generic.View):
         if comment_action == 'insert':
             dao.insert_comment(post_id, user_id, comment_content)
         elif comment_action == 'delete':
-            comment_list = dao.select_all_comments(post_id)
-            dao.delete_comment(comment_list[int(index)].get('comment_id'), user_id)
+            comment_id = int(request.POST.get('comment_id'))
+            Comment.objects.get(comment_id=comment_id).delete()
+
+            # comment_list = dao.select_all_comments(post_id)
+            # dao.delete_comment(comment_list[int(index)].get('comment_id'), user_id)
 
         post = dao.select_post(post_id)
         course_id = post.get('course_id').course_id

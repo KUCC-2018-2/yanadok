@@ -59,12 +59,13 @@
 
     $(document).on('click', '.delete_comment_btn', function(){
         var index = $('html').find(".delete_comment_btn").index(this);
-
+        var comment_id = $(this).attr("id");
         $.ajax({
             type: "POST",
             url: '',
-            data: {'comment_action': 'delete', 'index': index,
+            data: {'comment_action': 'delete', 'index': index, 'comment_id':comment_id,
             'csrfmiddlewaretoken': '{{ csrf_token }}',},
+
 
             success: function(response) {
               $dom = $(document.createElement("html"));
@@ -125,12 +126,12 @@
     <div id="comment_wrapper">
         <table id="comment_table">
   {% for comment in comment_list %}
-    <tr>
+    <tr class="each_comment">
         <td><strong>{{comment.user_id}} :</strong></td>
         <td> {{comment.comment_content}}</td>
         <td><small>{{comment.upload_time}}</small></td>
       {% if comment.user_id == user_id %}
-      <td><button type="submit" class="delete_comment_btn">댓글 삭제</button></td>
+      <td><button type="submit" class="delete_comment_btn" id={{comment.comment_id}}>댓글 삭제</button></td>
       {% endif %}
     </tr>
     {% endfor %}
