@@ -107,6 +107,9 @@
               </div>
           </div>
       {% if post.user_id == user %}
+      <div id="post_delete">
+        <a href="{% url 'board:delete_post' post.post_id %}">글 삭제</a>
+      </div>
       <div id="post_edit">
         <a href="{% url 'board:edit_post' post.post_id %}">글 수정</a>
       </div>
