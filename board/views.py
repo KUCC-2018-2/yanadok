@@ -190,6 +190,7 @@ class PostView(generic.View):
         template = loader.get_template('board/post.html')
         message = ''
         like_class = ''
+        user_id = request.user.id
 
         if request.method == "POST":
             like = request.POST.get('like')
@@ -198,25 +199,28 @@ class PostView(generic.View):
             comment_action = request.POST.get('comment_action')
             index = request.POST.get('index')
 
+            if like == 'like_active':
+                dao.delete_like(post_id, user_id)
+                message = '좋아요'
+                like_class = 'like'
 
-        user_id = request.user.id
-        if like == 'like_active':
-            dao.delete_like(post_id, user_id)
-            message = '좋아요'
-            like_class = 'like'
-        elif like == 'like':
-            dao.insert_like(post_id, user_id)
-            message = '좋아요 취소'
-            like_class = 'like_active'
+            elif like == 'like':
+                dao.insert_like(post_id, user_id)
+                message = '좋아요 취소'
+                like_class = 'like_active'
 
-        if comment_action == 'insert':
-            dao.insert_comment(post_id, user_id, comment_content)
-        elif comment_action == 'delete':
-            comment_id = int(request.POST.get('comment_id'))
-            Comment.objects.get(comment_id=comment_id).delete()
+            if comment_action == 'insert':
+                dao.insert_comment(post_id, user_id, comment_content)
 
-            # comment_list = dao.select_all_comments(post_id)
-            # dao.delete_comment(comment_list[int(index)].get('comment_id'), user_id)
+            elif comment_action == 'delete':
+                comment_id = int(request.POST.get('comment_id'))
+                Comment.objects.get(comment_id=comment_id).delete()
+                # comment_list = dao.select_all_comments(post_id)
+                # dao.delete_comment(comment_list[int(index)].get('comment_id'), user_id)
+
+            # elif comment_action == 'edit':
+
+
 
         post = dao.select_post(post_id)
         course_id = post.get('course_id').course_id
