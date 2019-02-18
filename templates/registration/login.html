@@ -1,38 +1,49 @@
 {% extends "base.html" %}
 
+{% block head %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static "user/login.css" %}">
+{% endblock %}
+
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
 
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %}
-{% endif %}
-<h2>Login</h2>
+<div class="w-100 h-50 d-flex bg-primary">
+    <div class="title">
+        <div class="row title-top-margin">
+        </div>
+        <div class="row align-self-center">
+            <img src="{% static "img/title.png" %}" width="100%" height="100%"/>
+        </div>
+        <div class="row text-white font-weight-bold justify-content-end">
+            <div class="mt-2">야 너도 할수있어<br/>독강</div>
+        </div>
+    </div>
+</div>
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
 
-<input type="submit" value="login">
-<input type="hidden" name="next" value="{{ next }}">
+<div class="col">
+    {% if form.errors %}
+    <div class="row justify-content-center alert alert-danger">
+        <div>아이디나 비밀번호가 일치하지 않습니다. 다시 시도해주세요.</div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <input type="text" class="justify-self-center form-text form-control login-input" placeholder="ID"/>
+    </div>
+    <div class="row justify-content-center">
+        <input type="password" class="justify-self-center form-control login-input" placeholder="PW"/>
+    </div>
+    <div class="row justify-content-center container-btn">
+        <input type="submit" class="btn btn-primary text-white" value="로그인"/>
+        <button class="btn btn-primary text-white"><a href="{% url 'user:signup' %}">회원가입</a></button>
+        <button class="btn btn-primary text-white"><a href="{% url 'password_reset' %}">아이디/비밀번호 찾기</a></button>
+    </div>
+    <input type="hidden" name="next" value="{{ next }}"/>
+</div>
 </form>
 
 {# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 
 {% endblock %}
