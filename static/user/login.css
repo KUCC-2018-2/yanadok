@@ -6,12 +6,12 @@
 }
 
 .title {
-    width: 500px;
+    width: 400px;
     margin: 0 auto;
 }
 
-.title-top-margin {
-    height: 28%;
+.title-img {
+    margin-top: 28%;
 }
 
 .container-btn {
@@ -20,7 +20,7 @@
 
 .btn {
     width: 250px;
-    height: 50px;
-    border-radius: 25px;
+    height: 40px;
+    border-radius: 20px;
     margin: 0 10px 0 10px;
 }

@@ -10,9 +10,7 @@
 
 <div class="w-100 h-50 d-flex bg-primary">
     <div class="title">
-        <div class="row title-top-margin">
-        </div>
-        <div class="row align-self-center">
+        <div class="title-img row align-self-center">
             <img src="{% static "img/title.png" %}" width="100%" height="100%"/>
         </div>
         <div class="row text-white font-weight-bold justify-content-end">
@@ -24,26 +22,24 @@
 {% csrf_token %}
 
 <div class="col">
-    {% if form.errors %}
+    {% if error %}
     <div class="row justify-content-center alert alert-danger">
-        <div>아이디나 비밀번호가 일치하지 않습니다. 다시 시도해주세요.</div>
+        <div>{{ error.message }}</div>
     </div>
     {% endif %}
     <div class="row justify-content-center">
-        <input type="text" class="justify-self-center form-text form-control login-input" placeholder="ID"/>
+        <input type="text" class="justify-self-center form-text form-control login-input" placeholder="ID" name="username"/>
     </div>
     <div class="row justify-content-center">
-        <input type="password" class="justify-self-center form-control login-input" placeholder="PW"/>
+        <input type="password" class="justify-self-center form-control login-input" placeholder="PW" name="password"/>
     </div>
     <div class="row justify-content-center container-btn">
         <input type="submit" class="btn btn-primary text-white" value="로그인"/>
-        <button class="btn btn-primary text-white"><a href="{% url 'user:signup' %}">회원가입</a></button>
-        <button class="btn btn-primary text-white"><a href="{% url 'password_reset' %}">아이디/비밀번호 찾기</a></button>
+        <a href="{% url 'user:signup' %}" class="btn btn-primary text-white">회원가입</a>
+        <a href="{% url 'password_reset' %}" class="btn btn-primary text-white">아이디/비밀번호 찾기</a>
     </div>
     <input type="hidden" name="next" value="{{ next }}"/>
 </div>
 </form>
-
-{# Assumes you setup the password_reset view in your URLconf #}
 
 {% endblock %}
