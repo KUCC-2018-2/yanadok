@@ -1,0 +1,40 @@
+body {
+    background-color: #8578d2;
+}
+
+nav {
+    height: 40px;
+}
+
+.content {
+    width: 450px;
+    margin: 40px auto 0 auto;
+}
+
+.title {
+    width: 400px;
+    margin: 0 auto 40px auto;
+}
+
+.signup-input {
+    width: 100%;
+    height: 40px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.signup-submit {
+    background-color: #fbb256;
+    width: 250px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 0 auto;
+}
+
+.form-control {
+    color: #6c757d;
+}
+
+.form-control > option {
+    width: 80%;
+}
