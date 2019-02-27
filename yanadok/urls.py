@@ -19,6 +19,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', include('timetable.urls')),
+    path('course/', include('course.urls')),
     path('', TemplateView.as_view(template_name='timetable/timetable.html'), name='home'),
     path(r'board/', include('board.urls', namespace='board')),
     path('admin/', admin.site.urls),

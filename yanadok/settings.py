@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'board',
     'user',
     'timetable',
+    'course',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

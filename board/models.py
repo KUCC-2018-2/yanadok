@@ -9,7 +9,7 @@ class Post(models.Model):
     )
     post_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey('user.User', models.DO_NOTHING, db_column='user_id', blank=True, null=True)
-    course_id = models.ForeignKey('timetable.Course', models.DO_NOTHING, db_column='course_id', blank=True, null=True)
+    course = models.ForeignKey('course.Course', models.DO_NOTHING, db_column='course_id', blank=True, null=True)
     title = models.CharField(max_length=20, blank=True, null=True)
     password = models.CharField(max_length=20, blank=True, null=True)
     content = models.TextField()

@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.template import loader
 from django.views import generic
 
-from . import dao
+from timetable import dao
+from course.models import Course
+from yanadok.common.views import ApiView
 
 
 def get_daylist(posts):
@@ -64,9 +66,11 @@ def get_pos(starttimelist, sposlist):
 
     return poslist
 
-splist = []
-def save_sp(request, splist):
 
+splist = []
+
+
+def save_sp(request, splist):
     userId = request.user.id
     splist = dao.select_user_timetable(userId)
 
@@ -115,10 +119,12 @@ def save_sp(request, splist):
         for i in range(0, len(sp_daylist)):
             for j in range(0, len(uc_daylist)):
                 if sp_daylist[i] == uc_daylist[j]:
-                    if int(sp_starttimelist[i]) >= int(uc_starttimelist[j]) and int(sp_starttimelist[i]) <= int(uc_endtimelist[j]):
+                    if int(sp_starttimelist[i]) >= int(uc_starttimelist[j]) and int(sp_starttimelist[i]) <= int(
+                            uc_endtimelist[j]):
                         is_valid = 0
                         break
-                    elif int(sp_starttimelist[i]) <= int(uc_starttimelist[j]) and int(sp_endtimelist[i]) >= int(uc_starttimelist[j]):
+                    elif int(sp_starttimelist[i]) <= int(uc_starttimelist[j]) and int(sp_endtimelist[i]) >= int(
+                            uc_starttimelist[j]):
                         is_valid = 0
                         break
 
@@ -187,7 +193,7 @@ class TimetableView(generic.View):
     #     return HttpResponseRedirect(reverse('board:board', args=(course_id,)))
 
 
-#시간표 수정
+# 시간표 수정
 class UpdateTimetableView(generic.View):
 
     def get(self, request):
@@ -268,10 +274,12 @@ class UpdateTimetableView(generic.View):
             for i in range(0, len(sp_daylist)):
                 for j in range(0, len(uc_daylist)):
                     if sp_daylist[i] == uc_daylist[j]:
-                        if int(sp_starttimelist[i]) >= int(uc_starttimelist[j]) and int(sp_starttimelist[i]) <= int(uc_endtimelist[j]):
+                        if int(sp_starttimelist[i]) >= int(uc_starttimelist[j]) and int(sp_starttimelist[i]) <= int(
+                                uc_endtimelist[j]):
                             is_valid = 0
                             break
-                        elif int(sp_starttimelist[i]) <= int(uc_starttimelist[j]) and int(sp_endtimelist[i]) >= int(uc_starttimelist[j]):
+                        elif int(sp_starttimelist[i]) <= int(uc_starttimelist[j]) and int(sp_endtimelist[i]) >= int(
+                                uc_starttimelist[j]):
                             is_valid = 0
                             break
 
@@ -311,5 +319,4 @@ class UpdateTimetableView(generic.View):
         }
 
         return HttpResponse(template.render(context, request))
-
 

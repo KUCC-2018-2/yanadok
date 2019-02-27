@@ -1,7 +1,7 @@
 # from django.db import connection
-from .models import Course, Timetable
+from .models import Timetable
+from course.models import Course
 from django.apps import apps
-
 
 user = apps.get_model('user', 'User')
 post = apps.get_model('board', 'Post')
@@ -11,7 +11,7 @@ def select_user_timetable(user_id):
     temp_rows = Timetable.objects.filter(user_id=user_id)
     courselist = []
     for tr in temp_rows:
-        row = Course.objects.filter(course_id=tr.course_id.course_id)
+        row = Course.objects.filter(course_id=tr.course.course_id)
         dic = {'course_id': row[0].course_id, 'course_no': row[0].course_no,
                'semester': row[0].semester, 'university': row[0].university,
                'campus': row[0].campus, 'classification': row[0].classification,
@@ -27,13 +27,7 @@ def select_all_courses():
     rows = Course.objects.all()
     courselist = []
     for row in rows:
-        dic = {'course_id': row.course_id, 'course_no': row.course_no,
-               'semester': row.semester, 'university': row.university,
-               'campus': row.campus, 'classification': row.classification,
-               'course_name': row.course_name, 'professor': row.professor,
-               'credit': row.credit, 'date_classroom': row.date_classroom,
-               }
-        courselist.append(dic)
+        courselist.append(row.__dict__)
 
     return courselist
 
@@ -48,28 +42,17 @@ def select_search_results_with_st(st, key_word):
 
     courselist = []
     for row in rows:
-        dic = {'course_id': row.course_id, 'course_no': row.course_no,
-               'semester': row.semester, 'university': row.university,
-               'campus': row.campus, 'classification': row.classification,
-               'course_name': row.course_name, 'professor': row.professor,
-               'credit': row.credit, 'date_classroom': row.date_classroom,
-               }
-        courselist.append(dic)
+        courselist.append(row.__dict__)
 
     return courselist
 
 
 def select_search_results(key_word):
-    rows = Course.objects.filter(course_no=key_word) | Course.objects.filter(course_name=key_word) | Course.objects.filter(professor=key_word)
+    rows = Course.objects.filter(course_no=key_word) | Course.objects.filter(
+        course_name=key_word) | Course.objects.filter(professor=key_word)
     courselist = []
     for row in rows:
-        dic = {'course_id': row.course_id, 'course_no': row.course_no,
-               'semester': row.semester, 'university': row.university,
-               'campus': row.campus, 'classification': row.classification,
-               'course_name': row.course_name, 'professor': row.professor,
-               'credit': row.credit, 'date_classroom': row.date_classroom,
-               }
-        courselist.append(dic)
+        courselist.append(row.__dict__)
 
     return courselist
 
@@ -78,7 +61,7 @@ def update_timetable(selected_courselist, user_id):
     rows = Timetable.objects.filter(user_id=user_id)
     row_idlist = []
     for row in rows:
-        row_idlist.append(row.course_id.course_id)
+        row_idlist.append(row.course.course_id)
 
     selected_course_idlist = []
     for sc in selected_courselist:
@@ -86,11 +69,11 @@ def update_timetable(selected_courselist, user_id):
 
     for scid in selected_course_idlist:
         if scid not in row_idlist:
-            Timetable.objects.create(user_id=user(id=user_id), course_id=Course(course_id=scid))
+            Timetable.objects.create(user=user(id=user_id), course=Course(course_id=scid))
 
     for row_id in row_idlist:
         if row_id not in selected_course_idlist:
-            Timetable.objects.filter(user_id=user_id, course_id=row_id).delete()
+            Timetable.objects.filter(user=user_id, course=row_id).delete()
 
 
 def select_all_posts(course_id):

@@ -15,7 +15,7 @@ from django.shortcuts import render
 
 from . import dao
 
-course = apps.get_model('timetable', 'Course')
+course = apps.get_model('course', 'Course')
 user = apps.get_model('user', 'User')
 
 

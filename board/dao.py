@@ -3,7 +3,7 @@ from .models import Post, PostLike, Comment
 from django.apps import apps
 
 
-course = apps.get_model('timetable', 'Course')
+course = apps.get_model('course', 'Course')
 timetable = apps.get_model('timetable', 'Timetable')
 user = apps.get_model('user', 'User')
 
