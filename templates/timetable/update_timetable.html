@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>update_timetable</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{% static "timetable/update_timetable.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'timetable/update_timetable.css' %}?after">
   </head>
   <body>
@@ -287,10 +288,11 @@
                 <input type="radio" name="search_type" value="course_name" id="course_name"> 교과목명
                 <input type="radio" name="search_type" value="professor" id="professor"> 담당교수
             </div>
-            <input type="text" name="검색어 입력" id="search_input">
-            <input type="submit" value="검색" id="search_btn">
+            <input type="text" name="검색어 입력" id="search-input">
+            <input type="submit" value="검색" id="btn-search" class="btn">
+            <input type="submit" value="검색2" id="search_btn">
           </div>
-          <div id="search_result_table">
+          <div id="search-result-table">
           <table>
             <tr class="head">
               <td>학수번호-분반</td>
@@ -302,7 +304,7 @@
               <td>선택</td>
             </tr>
             {% for post in posts %}
-            <tr class="search_result_row" style="height: 25px;">
+            <tr class="search-result-row" style="height: 25px;">
               <td>{{ post.course_no }}</td>
               <td>{{ post.classification }}</td>
               <td>{{ post.course_name }}</td>
