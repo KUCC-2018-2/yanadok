@@ -9,3 +9,9 @@ class TimetableApiView(ApiView):
 
     def get(self, request):
         return self.response(dao.select_user_timetable(request.user.id))
+
+
+class TimetableDeleteApiView(ApiView):
+    def delete(self, request, course_id):
+        services.delete_course_from_timetable(request.user, course_id)
+        return self.response(status=200)

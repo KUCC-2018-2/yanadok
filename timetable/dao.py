@@ -1,9 +1,9 @@
 # from django.db import connection
-from django.forms import model_to_dict
 
-from .models import Timetable
-from course.models import Course
 from django.apps import apps
+
+from course.models import Course
+from .models import Timetable
 
 user = apps.get_model('user', 'User')
 post = apps.get_model('board', 'Post')
@@ -13,8 +13,9 @@ def select_user_timetable(user_id):
     temp_rows = Timetable.objects.filter(user_id=user_id)
     courselist = []
     for tr in temp_rows:
-        row = Course.objects.get(course_id=tr.course.course_id)
-        courselist.append(row.to_dict())
+        row = Course.objects.get(course_id=tr.course.course_id).to_dict()
+        row['id'] = tr.id
+        courselist.append(row)
 
     return courselist
 

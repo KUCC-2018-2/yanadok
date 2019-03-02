@@ -13,3 +13,7 @@ def add_course_to_timetable(user, course_id):
         if timetable.is_overlapped(course):
             raise DuplicateTimetableException
     Timetable.objects.create(user=user, course=course)
+
+
+def delete_course_from_timetable(user, course_id):
+    Timetable.objects.filter(user=user, course_id=course_id).delete()

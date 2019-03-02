@@ -1,6 +1,7 @@
 $(document).ready(() => {
     $('#btn-search').on('click', loadCourses);
     $('#search-result-table').on('click', addCourseToTimetable);
+    $('#course-list-table').on('click', deleteCourseFromTimetable);
     loadTimetable();
     loadCourses();
 });
@@ -69,6 +70,31 @@ function renderTimetable(courses) {
     let table = $('#course-list-table');
     let courseHtmls = courses.map((course) => templateCourseRow(course, "delete"));
     showCourseTemplatesToTable(table, courseHtmls);
+}
+
+function deleteCourseFromTimetable(event) {
+    if (!event.target.classList.contains('btn-delete')) {
+        return;
+    }
+    let timetable_id =  parseInt(event.target.closest('tr').getAttribute('data-id'));
+    fetch('/timetable/' + timetable_id, {
+        method: 'DELETE',
+        credentials: "same-origin",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+    }).then((res) => {
+            if (res.ok) {
+                return loadTimetable();
+            }
+            throw res
+        })
+      .catch((res) => {
+          handleError(res)
+      });
+
 }
 
 function loadCourses() {
