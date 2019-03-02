@@ -1,35 +1,27 @@
 import json
-from collections import Iterable
 
-from django.core import serializers
 from django.http import JsonResponse
 from django.views import View
 
+from yanadok.exceptions import YanadokBaseException
+
 
 class ApiView(View):
-    def response(self, data, status=200, fields=None):
-        payload = self.__serialize_data(data, fields)
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            request.POST = json.loads(request.body)
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except YanadokBaseException as e:
+            return self.response(data=e.message, status=e.status)
+        except Exception as e:
+            return self.response(data='에러가 발생했습니다. 잠시 뒤에 다시 시도해주세요.', status=500)
+
+    def response(self, data="", status=200):
         return JsonResponse({
             'status': "success" if status < 400 else "fail",
-            'data': payload
+            'data': data
         }, status=status)
-
-    def __serialize_data(self, data, fields):
-        if isinstance(data, dict):
-            return data
-        if isinstance(data, Iterable):
-            return self.__serialize(data, fields)
-
-        return self.__serialize([data], fields)
-    
-    def __serialize(self, data, fields):
-        serialized = json.loads(serializers.serialize('json', data, fields=fields))
-        result = []
-        for item in serialized:
-            item['fields']['id'] = item['pk']
-            result.append(item['fields'])
-        return result
-
 
 
 

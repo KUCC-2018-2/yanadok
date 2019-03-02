@@ -1,15 +1,17 @@
 class YanadokBaseException(BaseException):
+    status = 500
+
     def __init__(self, message=''):
         self.message = message
 
 
 class BadRequestException(YanadokBaseException):
-    pass
+    status = 400
 
 
 class NotFoundException(YanadokBaseException):
-    pass
+    status = 404
 
 
-class InvalidArgumentException(YanadokBaseException):
+class InvalidArgumentException(BadRequestException):
     pass
