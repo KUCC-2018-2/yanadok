@@ -18,7 +18,6 @@ class Post(models.Model):
     upload_time = models.DateTimeField(default=timezone.now())
 
     class Meta:
-        managed = False
         db_table = 'post'
 
 
@@ -40,5 +39,4 @@ class Comment(models.Model):
     upload_time = models.DateTimeField(default=timezone.now())
 
     class Meta:
-        managed = True
         db_table = 'comment'

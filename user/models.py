@@ -25,7 +25,7 @@ class User(AbstractUser):
                     first_name=body['name'],
                     nickname=body['nickname'])
         user.set_password(body['password'])
-        user.is_active = False
+        # user.is_active = False
         return user
 
     @staticmethod
@@ -44,5 +44,4 @@ class User(AbstractUser):
             raise InvalidArgumentException('닉네임이 너무 짧습니다.')
 
     class Meta:
-        managed = True
         db_table = 'user'
