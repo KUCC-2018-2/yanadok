@@ -1,9 +1,77 @@
 $(document).ready(() => {
-    $('#btn-search').on('click', getCourses);
+    $('#btn-search').on('click', loadCourses);
+    $('#search-result-table').on('click', addCourseToTimetable);
+    loadTimetable();
+    loadCourses();
 });
 
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
-function getCourses() {
+function loadTimetable() {
+    fetch('/timetable')
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            throw res.json();})
+        .then((body) => {renderTimetable(body.data)})
+        .catch((e) => {alert(e.data)});
+}
+
+
+function addCourseToTimetable(event) {
+    if (!event.target.classList.contains('btn-add')) {
+        return;
+    }
+
+    fetch('/timetable', {
+        method: 'POST',
+        credentials: "same-origin",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            'course_id': parseInt(event.target.closest('tr').getAttribute('data-id'))
+        })
+    }).then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            throw res
+        })
+        .then((body) => {
+            renderTimetable(body.data);
+        })
+      .catch((res) => {
+          handleError(res)
+      });
+    event.stopPropagation();
+}
+
+function renderTimetable(courses) {
+    let table = $('#course-list-table');
+    let courseHtmls = courses.map((course) => templateCourseRow(course, "delete"));
+    showCourseTemplatesToTable(table, courseHtmls);
+}
+
+function loadCourses() {
     let url = "/course?";
     url += $.param(getSearchCriteria());
     fetch(url)
@@ -11,13 +79,24 @@ function getCourses() {
             if (res.ok) {
                 return res.json();
             }
-            throw '강의 정보 검색에 실패했습니다. 잠시 뒤에 다시 시도해주세요.';
+            throw res;
         })
         .then((body) => {
-            $(".search-result-row").remove();
-            showCourseSearchResult(body.data);
+            let table = $('#search-result-table');
+            let courseHtmls = body.data.map((course) => templateCourseRow(course));
+            showCourseTemplatesToTable(table, courseHtmls);
         })
-        .catch((e) => alert(e));
+        .catch((res) =>
+            handleError(res)
+        );
+}
+
+function handleError(res) {
+    if (res.json) {
+        res.json().then(e => alert(e.data))
+    } else {
+        alert('에러가 발생했습니다. 잠시 뒤에 다시 시도해주세요.')
+    }
 }
 
 function getSearchCriteria() {
@@ -30,26 +109,24 @@ function getSearchCriteria() {
     return {}
 }
 
-function showCourseSearchResult(courses) {
-    let rows = courses.map((course) => templateCourseRow(course));
-    let head = $('#search-result-table tr.head');
-    rows.reverse().forEach((row) => {$(row).insertAfter(head)});
+function showCourseTemplatesToTable(table, courses) {
+    let rows = courses.join('');
+    let head = $(table).find('tr.head');
+    $(table).find(".course-row").remove();
+    $(rows).insertAfter(head);
 }
 
-function templateCourseRow(course) {
-    return `<tr class="search-result-row">
+function templateCourseRow(course, btnType="add") {
+    let btn = btnType === "add" ?
+        `<td><input type="submit" value="선택" class="btn btn-add"></td>`
+        : `<td><input type="submit" value="삭제" class="btn btn-delete"></td>`;
+    return `<tr class="course-row"  data-id="${course.course_id}">
               <td>${course.course_no}</td>
               <td>${course.classification}</td>
               <td>${course.course_name}</td>
               <td>${course.professor}</td>
               <td>${course.credit}</td>
               <td>${course.date_classroom}</td>
-              <td><input type="submit" value="삭제" class="delete"></td>
+              ${btn}
             </tr>`;
-}
-
-function updateTimetableRequest() {
-    fetch("/test").then((res) => {
-
-    });
 }

@@ -4,8 +4,6 @@ from django.template import loader
 from django.views import generic
 
 from timetable import dao
-from course.models import Course
-from yanadok.common.views import ApiView
 
 
 def get_daylist(posts):

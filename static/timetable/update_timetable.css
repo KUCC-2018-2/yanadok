@@ -97,7 +97,7 @@ table, th, td {
  border-bottom: none;
 }
 
-#course_list_table {
+#course-list-table {
   position: absolute;
   left: 250px;
   top: 100px;

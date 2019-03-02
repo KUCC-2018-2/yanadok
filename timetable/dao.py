@@ -1,4 +1,6 @@
 # from django.db import connection
+from django.forms import model_to_dict
+
 from .models import Timetable
 from course.models import Course
 from django.apps import apps
@@ -11,14 +13,8 @@ def select_user_timetable(user_id):
     temp_rows = Timetable.objects.filter(user_id=user_id)
     courselist = []
     for tr in temp_rows:
-        row = Course.objects.filter(course_id=tr.course.course_id)
-        dic = {'course_id': row[0].course_id, 'course_no': row[0].course_no,
-               'semester': row[0].semester, 'university': row[0].university,
-               'campus': row[0].campus, 'classification': row[0].classification,
-               'course_name': row[0].course_name, 'professor': row[0].professor,
-               'credit': row[0].credit, 'date_classroom': row[0].date_classroom,
-               }
-        courselist.append(dic)
+        row = Course.objects.get(course_id=tr.course.course_id)
+        courselist.append(row.to_dict())
 
     return courselist
 
@@ -27,7 +23,7 @@ def select_all_courses():
     rows = Course.objects.all()
     courselist = []
     for row in rows:
-        courselist.append(row.__dict__)
+        courselist.append(row.to_dict())
 
     return courselist
 
@@ -42,7 +38,7 @@ def select_search_results_with_st(st, key_word):
 
     courselist = []
     for row in rows:
-        courselist.append(row.__dict__)
+        courselist.append(row.to_dict())
 
     return courselist
 
@@ -52,28 +48,10 @@ def select_search_results(key_word):
         course_name=key_word) | Course.objects.filter(professor=key_word)
     courselist = []
     for row in rows:
-        courselist.append(row.__dict__)
+        courselist.append(row.to_dict())
 
     return courselist
 
-
-def update_timetable(selected_courselist, user_id):
-    rows = Timetable.objects.filter(user_id=user_id)
-    row_idlist = []
-    for row in rows:
-        row_idlist.append(row.course.course_id)
-
-    selected_course_idlist = []
-    for sc in selected_courselist:
-        selected_course_idlist.append(sc['course_id'])
-
-    for scid in selected_course_idlist:
-        if scid not in row_idlist:
-            Timetable.objects.create(user=user(id=user_id), course=Course(course_id=scid))
-
-    for row_id in row_idlist:
-        if row_id not in selected_course_idlist:
-            Timetable.objects.filter(user=user_id, course=row_id).delete()
 
 
 def select_all_posts(course_id):
