@@ -70,6 +70,28 @@ function renderTimetable(courses) {
     let table = $('#course-list-table');
     let courseHtmls = courses.map((course) => templateCourseRow(course, "delete"));
     showCourseTemplatesToTable(table, courseHtmls);
+    colorToTimetable(courses);
+}
+
+function colorToTimetable(courses) {
+    $(`#timetable .cell`).attr('class', 'cell');
+    courses.forEach((course) => {
+        let colorClass = 'color-' + Math.floor(Math.random() * 8);
+        course['course_times'].forEach((time) => {
+            let cell = findCellFromTimetable(time);
+            cell.removeClass();
+            cell.addClass('cell');
+            cell.addClass(colorClass);
+        });
+    });
+}
+
+
+function findCellFromTimetable(time) {
+    let course_days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+    let column = course_days.indexOf(time['course_day']) + 2;
+    let row = time['order'] + 1;
+    return $(`#timetable tr:nth-child(${row}) td:nth-child(${column})`);
 }
 
 function deleteCourseFromTimetable(event) {

@@ -25,6 +25,12 @@ a:hover {
     background-color: #8578d2 !important;
 }
 
+
+.bg-accent {
+    background-color: #fbb256 !important;
+}
+
+
 .btn-primary {
     border-color: #8578d2 !important;
     background-color: #8578d2 !important;
@@ -34,4 +40,3 @@ a:hover {
 .btn-primary:hover {
     background-color: #9370db !important;
 }
-

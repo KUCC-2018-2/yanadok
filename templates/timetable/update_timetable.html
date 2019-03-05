@@ -1,211 +1,86 @@
-{% load staticfiles %}
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>update_timetable</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% extends "base.html" %}
+{% block head %}
+    {% load staticfiles %}
     {% if user.is_authenticated %}
     <script src="{% static "timetable/update_timetable.js" %}"></script>
     {% endif %}
-    <link rel="stylesheet" type="text/css" href="{% static 'timetable/update_timetable.css' %}?after">
-  </head>
-  <body>
-  {% if user.is_authenticated %}
-  {% csrf_token %}
-  {% load filters %}
-    <div id="nav">
-      <div class="wrap">
-        <div id="logo">
-          <p>  logo </p>
-        </div>
-        <div id="logout">
-          <p><a href="{% url 'logout' %}">logout</a></p>
-        </div>
-      </div>
-    </div>
-    <div id="update_timetable_container">
-      <div id="update_timetable_wrapper">
-        <div id="timetable">
-          <table>
-            <tr class="head">
-              <th></th>
-              <td>월</td>
-              <td>화</td>
-              <td>수</td>
-              <td>목</td>
-              <td>금</td>
-            </tr>
-            <th>
-              <div class="period_long">
-                1교시
-              </div>
-              <div class="period_long">
-                2교시
-              </div>
-              <div class="period_short">
-                3교시
-              </div>
-              <div class="period_short">
-                4교시
-              </div>
-              <div class="period_long">
-                5교시
-              </div>
-              <div class="period_long">
-                6교시
-              </div>
-              <div class="period_short">
-                7교시
-              </div>
-              <div class="period_short last_row">
-                8교시
-              </div>
-            </th>
-            <td>
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses" id="mon">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '월' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td>
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses" id="tue">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '화' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td>
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses" id="wed">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '수' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td>
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses" id="thu">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '목' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td>
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses" id="fri">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '금' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px; width:25px"></div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-          </table>
-          <div id="update_timetable">
-            <a href="/" id="update_timetable_btn">시간표 수정 완료</a>
-          </div>
-        </div>
-        <div id="course-list-table">
-          <div id="course-list-table_wrapper">
-          <table>
-            <tr class="head">
-              <td>학수번호-분반</td>
-              <td>이수구분</td>
-              <td>교과목명</td>
-              <td>담당교수</td>
-              <td>학점</td>
-              <td>강의시간 / 강의실</td>
-              <td>삭제</td>
-            </tr>
-          </table>
+    <link rel="stylesheet" type="text/css" href="{% static 'timetable/update_timetable.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'timetable/timetable_color.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% include "nav.html" %}
+    {% if user.is_authenticated %}
+    {% csrf_token %}
+    {% load filters %}
+        <div class="wrapper">
+            <div class="timetable-container row">
+                <div class="col-4">
+                    <table id="timetable">
+                        <tr>
+                            <th></th>
+                            <th>월</th>
+                            <th>화</th>
+                            <th>수</th>
+                            <th>목</th>
+                            <th>금</th>
+                        </tr>
+                        {% for i in i|rjust:8 %}
+                        <tr>
+                            <td class="timetable-order">{{forloop.counter}}교시</td>
+                            <td class="cell"></td>
+                            <td class="cell"></td>
+                            <td class="cell"></td>
+                            <td class="cell"></td>
+                            <td class="cell"></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="col">
+                    <table id="course-list-table">
+                        <tr class="head">
+                          <td class="hd-course-no">학수번호-분반</td>
+                          <td class="hd-classification">이수구분</td>
+                          <td class="hd-coursename">교과목명</td>
+                          <td class="hd-professor">담당교수</td>
+                          <td class="hd-credit">학점</td>
+                          <td class="hd-space-time">강의시간 / 강의실</td>
+                          <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <div id="search_course">
+                  <div id="search_option">
+                    <div id="selectors">
+                        <input type="radio" name="search_type" value="course_no" id="course_no"> 학수번호
+                        <input type="radio" name="search_type" value="course_name" id="course_name"> 교과목명
+                        <input type="radio" name="search_type" value="professor" id="professor"> 담당교수
+                    </div>
+                    <input type="text" name="검색어 입력" id="search-input">
+                    <input type="submit" value="검색" id="btn-search" class="btn">
+                  </div>
+                  <div id="search-result-table">
+                  <table>
+                    <tr class="head">
+                      <td class="hd-course-no">학수번호-분반</td>
+                      <td class="hd-classification">이수구분</td>
+                      <td class="hd-coursename">교과목명</td>
+                      <td class="hd-professor">담당교수</td>
+                      <td class="hd-credit">학점</td>
+                      <td class="hd-space-time">강의시간 / 강의실</td>
+                      <td></td>
+                    </tr>
+                  </table>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="search_course">
-          <div id="search_option">
-            <div id="selectors">
-                <input type="radio" name="search_type" value="course_no" id="course_no"> 학수번호
-                <input type="radio" name="search_type" value="course_name" id="course_name"> 교과목명
-                <input type="radio" name="search_type" value="professor" id="professor"> 담당교수
-            </div>
-            <input type="text" name="검색어 입력" id="search-input">
-            <input type="submit" value="검색" id="btn-search" class="btn">
-          </div>
-          <div id="search-result-table">
-          <table>
-            <tr class="head">
-              <td>학수번호-분반</td>
-              <td>이수구분</td>
-              <td>교과목명</td>
-              <td>담당교수</td>
-              <td>학점</td>
-              <td>강의시간 / 강의실</td>
-              <td>선택</td>
-            </tr>
-          </table>
-            </div>
-        </div>
-        </div>
-      </div>
-  </body>
-  {% else %}
+    {% else %}
     <p>You are not logged in</p>
     <a href="{% url 'user:login' %}">login</a> |
     <a href="{% url 'user:signup' %}">signup</a>
-  {% endif %}
-</html>
+    {% endif %}
+{% endblock %}
