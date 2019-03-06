@@ -83,12 +83,6 @@ def like_active(post_id, user_id):
     return len(row) != 0
 
 
-def get_like_num(post_id):
-    row = PostLike.objects.filter(post_id=post_id)
-
-    return len(row)
-
-
 def insert_like(post_id, user_id):
     if PostLike is not None and user_id is not None:
         PostLike.objects.create(post_id=Post(post_id=post_id), user_id=user(id=user_id))

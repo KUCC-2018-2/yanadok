@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.views import generic
 
 from course.models import Course
-from .models import Post, Comment
+from .models import Post, Comment, PostLike
 from django.apps import apps
 from .forms import PostForm
 
@@ -157,7 +157,7 @@ class PostView(generic.View):
         template = loader.get_template('board/post.html')
 
         post = Post.objects.get(post_id=post_id)
-        like_num = dao.get_like_num(post_id)
+        like_num = PostLike.objects.filter(post_id=post_id).count
         course_id = post.course_id
 
         user_id = request.user.id
@@ -194,7 +194,7 @@ class PostView(generic.View):
             message = request.POST.get('message')
             comment_content = request.POST.get('comment_content')
             comment_action = request.POST.get('comment_action')
-            index = request.POST.get('index')
+
 
             if like == 'like_active':
                 dao.delete_like(post_id, user_id)
@@ -213,14 +213,10 @@ class PostView(generic.View):
                 comment_id = int(request.POST.get('comment_id'))
                 Comment.objects.get(comment_id=comment_id).delete()
 
-            # elif comment_action == 'edit':
-
-
-
-        post = dao.select_post(post_id)
-        course_id = post.get('course_id').course_id
-        like_num = dao.get_like_num(post_id)
-        comment_list = dao.select_all_comments(post_id)
+        post = Post.objects.get(post_id=post_id)
+        course_id = post.course_id
+        like_num = PostLike.objects.filter(post_id=post_id).count
+        comment_list = Comment.objects.filter(post_id=post_id)
 
         context = {
             'user_id': user.objects.filter(id=user_id)[0],
