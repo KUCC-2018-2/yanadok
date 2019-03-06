@@ -106,7 +106,7 @@ class NewPost(generic.View):
         if form.is_valid():
             post = form.save(commit=False)
             post.user_id = request.user
-            post.course_id = course.objects.get(course_id=course_id)
+            post.course_id = course_id
             post.save()
             return redirect('board:board', course_id)
         else:
@@ -127,7 +127,7 @@ class EditPost(generic.View):
     def post(self, request, post_id):
         template = 'board/new_post.html'
         posting = Post.objects.get(post_id=post_id)
-        course_id = posting.course_id.course_id
+        course_id = posting.course_id
         form = PostForm(request.POST, instance=posting)
         if form.is_valid():
             post = form.save(commit=False)

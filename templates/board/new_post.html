@@ -1,35 +1,42 @@
 {% extends 'base.html' %}
-
+{% block head %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'board/new_post.css' %}">
+{% endblock %}
 {% block content %}
-{% include 'nav2.html' %}
+{% include "nav2.html" %}
 <form method="post" >
     {% csrf_token %}
 
-    <p>
-    {{ form.post_type.label_tag }}<br>
-        {{ form.post_type }}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-    </p>
-    <p>
-    {{ form.title.label_tag }}<br>
-        {{ form.title }}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-    </p>
-    <p>
-    {{ form.content.label_tag }}<br>
-        {{ form.content }}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-    </p>
+    <div class="col">
+        <div class="row justify-content-center">
+            <div class="field box-type">
+                <label for="id_post_type" class="label">게시판</label>
+                <select name="post_type" id="id_post_type">
+                    <option value="공지사항" selected="">공지사항</option>
+                    <option value="스터디/팀플">스터디/팀플</option>
+                </select>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="field box-title">
+                <label for="id_title" class="label">제목</label>
+                <input type="text" name="title" maxlength="20" id="id_title" class="input">
+            </div>
 
-    <button type="submit">Save</button>
+        </div>
+        <div class="row justify-content-center">
+            <div class="field box-content">
+                <label for="id_content" class="label">내용</label>
+                <textarea name="content" cols="40" rows="10" required="" id="id_content" class="input"></textarea>
+            </div>
+
+        </div>
+        <div class="row justify-content-center">
+            <div class="field box-submit">
+                <button type="submit" class="btn btn-primary text-white">저장</button>
+                <a href="javascript:history.back()" class="btn btn-primary text-white">취소</a>
+            </div>
+        </div>
 </form>
-<p>
-    <a href="javascript:history.back()">Cancel</a>
-</p>
 {% endblock %}
