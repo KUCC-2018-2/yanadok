@@ -1,6 +1,7 @@
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.urls import reverse
 from django.views import generic
 
 from timetable import dao
@@ -138,50 +139,53 @@ def save_sp(request, splist):
 # 메인_시간표 메뉴
 class TimetableView(generic.View):
     def get(self, request):
-        template = loader.get_template('timetable/timetable.html')
+        if request.user.is_authenticated:
+            template = loader.get_template('timetable/timetable.html')
 
-        userId = request.user.id
+            userId = request.user.id
 
-        if userId != None:
-            posts = dao.select_user_timetable(userId)
+            if userId != None:
+                posts = dao.select_user_timetable(userId)
 
-            idlist = []
-            namelist = []
-            proflist = []
-            dclist = []
-            for p in posts:
-                for d in p.get('date_classroom').split('/ '):
-                    idlist.append(p.get('course_id'))
-                    namelist.append(p.get('course_name'))
-                    proflist.append(p.get('professor'))
-                    dclist.append(d.split(')')[1])
+                idlist = []
+                namelist = []
+                proflist = []
+                dclist = []
+                for p in posts:
+                    for d in p.get('date_classroom').split('/ '):
+                        idlist.append(p.get('course_id'))
+                        namelist.append(p.get('course_name'))
+                        proflist.append(p.get('professor'))
+                        dclist.append(d.split(')')[1])
 
-            daylist = get_daylist(posts)
-            starttimelist = get_starttimelist(posts)
-            endtimelist = get_endtimelist(posts)
+                daylist = get_daylist(posts)
+                starttimelist = get_starttimelist(posts)
+                endtimelist = get_endtimelist(posts)
 
-            sposlist = [160, 238, 315, 365, 416, 492, 570, 619]
-            eposlist = [222.5, 300.5, 356.6, 406.6, 478.5, 554.5, 611.6, 660.6]
-            small_area = 63.75
+                sposlist = [160, 238, 315, 365, 416, 492, 570, 619]
+                eposlist = [222.5, 300.5, 356.6, 406.6, 478.5, 554.5, 611.6, 660.6]
+                small_area = 63.75
 
-            arealist = get_area(starttimelist, endtimelist, sposlist, eposlist, small_area)
-            poslist = get_pos(starttimelist, sposlist)
+                arealist = get_area(starttimelist, endtimelist, sposlist, eposlist, small_area)
+                poslist = get_pos(starttimelist, sposlist)
 
-            context = {
-                'posts': posts,
-                'idlist': idlist,
-                'namelist': namelist,
-                'proflist': proflist,
-                'dclist': dclist,
-                'daylist': daylist,
-                'arealist': arealist,
-                'poslist': poslist,
-                'range': range(0, len(namelist)),
-            }
+                context = {
+                    'posts': posts,
+                    'idlist': idlist,
+                    'namelist': namelist,
+                    'proflist': proflist,
+                    'dclist': dclist,
+                    'daylist': daylist,
+                    'arealist': arealist,
+                    'poslist': poslist,
+                    'range': range(0, len(namelist)),
+                }
+            else:
+                context = {}
+
+            return HttpResponse(template.render(context, request))
         else:
-            context = {}
-
-        return HttpResponse(template.render(context, request))
+            return HttpResponseRedirect(reverse('user:login'))
 
     # def post(self, request):
     #
