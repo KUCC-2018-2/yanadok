@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% block nav %}
+{% block content %}
+{% include 'nav2.html' %}
 <form method="post" >
     {% csrf_token %}
 
