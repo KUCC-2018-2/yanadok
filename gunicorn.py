@@ -1,3 +1,4 @@
 daemon = True
-bind = 'unix:/run/gunicorn.sock yanadok.wsgi:application'
-workers = 5
+# bind = 'unix:/home/ec2-user/yanadok/run/gunicorn.sock'
+bind = "localhost:8000"
+workers = 3
