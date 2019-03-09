@@ -13,19 +13,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# TODO SECRET KEY 숨기기
-SECRET_KEY = '@p1)x*c581_(g8=bj76ylhtg1086e4h#jkx%nl7o_l)*+x092q'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -74,22 +66,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'yanadok.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'yanadock',
-        'USER': 'yanadock',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -142,5 +118,7 @@ LOGOUT_REDIRECT_URL = 'home'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'kuccyanadok@gmail.com'
-EMAIL_HOST_PASSWORD = 'kucc951223'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
+
+
