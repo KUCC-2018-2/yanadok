@@ -17,6 +17,5 @@ DATABASES = {
 
 SECRET_KEY = '@p1)x*c581_(g8=bj76ylhtg1asde4h#jkx%nl7o_l)*+x092q'
 
+EMAIL_AUTH_HOST = 'yanadok.kucc.co.kr'
 
-#   confirmation email
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']

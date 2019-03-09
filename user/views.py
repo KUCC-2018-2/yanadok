@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -22,8 +23,8 @@ def signup(request):
         try:
             check_invalid_signup_request(body)
             user = User.from_registration_info(body)
-            user.save()
             send_registration_email(request, user)
+            user.save()
             return redirect('login')
         except (DuplicateUserException, BadRequestException, InvalidArgumentException) as e:
             return render_with_error_message(request, 'user/signup.html', e.message)
@@ -71,7 +72,7 @@ def send_registration_email(request, user):
     mail_subject = 'Activate your blog account.'
     message = render_to_string('user/acc_active_email.html', {
         'user': user,
-        'domain': current_site.domain,
+        'domain': settings.EMAIL_AUTH_HOST if settings.EMAIL_AUTH_HOST else 'localhost',
         'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
         'token': account_activation_token.make_token(user),
     })

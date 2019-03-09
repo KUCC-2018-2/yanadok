@@ -11,7 +11,6 @@ DATABASES = {
         'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '',
+
     }
 }
-
-EMAIL_HOST_PASSWORD = 'kucc951223'
