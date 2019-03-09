@@ -11,7 +11,6 @@
     <div id="wrapper">
     {% block content %}
     {% csrf_token %}
-    {% if user.is_authenticated %}
     {% load filters %}
     <div id="nav">
       <div class="wrap">
@@ -221,12 +220,8 @@
       </div>
     </div>
 
-        {% else %}
-    <p>Welcome to Yanadok</p>
-    <a href="{% url 'login' %}">login</a> |
-    <a href="{% url 'user:signup' %}">signup</a> |
-    <a href="{% url 'password_reset' %}">reset password</a>
-  {% endif %}
+
+
   {% endblock %}
         </div>
   </body>

@@ -1,0 +1,60 @@
+.input {
+    width: 600px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.label{
+    width: 50px;
+}
+
+.field{
+    margin-top: 30px;
+    width: 800px;
+}
+
+.box-type{
+    height: 30px;
+}
+
+.box-title{
+    height: 30px;
+}
+
+.box-content{
+    height: 400px;
+}
+
+.box-submit{
+    padding-left:480px;
+    height: 100px;
+}
+
+#id_post_type{
+    height: 30px;
+}
+
+#id_title{
+    height: 30px;
+}
+
+#id_content{
+    height: 400px;
+}
+
+
+.btn {
+    width: 70px;
+    height: 40px;
+    border-radius: 5px;
+    margin: 0 10px 0 10px;
+}
+
+.text-white {
+    color: #fff!important;
+}
+
+.btn-primary {
+    border-color: #8578d2 !important;
+    background-color: #8578d2 !important;
+}

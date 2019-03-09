@@ -22,11 +22,11 @@ class Post(models.Model):
 
 
 class PostLike(models.Model):
-    user_id = models.ForeignKey('user.User', models.DO_NOTHING, db_column='user_id', primary_key=True)
-    post_id = models.ForeignKey(Post, models.DO_NOTHING, db_column='post_id')
+    post_like_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey('user.User', models.DO_NOTHING, db_column='user_id', blank=True, null=True)
+    post_id = models.ForeignKey(Post, models.DO_NOTHING, db_column='post_id', blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'post_like'
         unique_together = (('user_id', 'post_id'),)
 

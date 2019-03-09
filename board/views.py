@@ -6,7 +6,8 @@ from django.template import loader
 from django.urls import reverse
 from django.views import generic
 
-from .models import Post, Comment
+from course.models import Course
+from .models import Post, Comment, PostLike
 from django.apps import apps
 from .forms import PostForm
 
@@ -25,13 +26,10 @@ class BoardView(generic.View):
         template = loader.get_template('board/board.html')
         user_id = request.user.id
 
-        posts = dao.select_all_posts(course_id)
-
-        courselist = dao.get_courselist(user_id)
-        course_name = dao.get_course_name(course_id)
+        posts = Post.objects.filter(course_id=course_id)
+        course_name = Course.objects.get(course_id=course_id).course_name
         course_idlist = []
-        for course in courselist:
-            course_idlist.append(course['course_id'])
+
 
         notice_posts = dao.select_notice_posts(course_id)
 
@@ -40,7 +38,6 @@ class BoardView(generic.View):
             'course_name': course_name,
             'posts': posts,
             'notice_posts': notice_posts,
-            'courselist': courselist,
             'course_idlist': course_idlist,
         }
 
@@ -109,7 +106,7 @@ class NewPost(generic.View):
         if form.is_valid():
             post = form.save(commit=False)
             post.user_id = request.user
-            post.course_id = course.objects.get(course_id=course_id)
+            post.course_id = course_id
             post.save()
             return redirect('board:board', course_id)
         else:
@@ -130,7 +127,7 @@ class EditPost(generic.View):
     def post(self, request, post_id):
         template = 'board/new_post.html'
         posting = Post.objects.get(post_id=post_id)
-        course_id = posting.course_id.course_id
+        course_id = posting.course_id
         form = PostForm(request.POST, instance=posting)
         if form.is_valid():
             post = form.save(commit=False)
@@ -159,9 +156,9 @@ class PostView(generic.View):
     def get(self, request, post_id):
         template = loader.get_template('board/post.html')
 
-        post = dao.select_post(post_id)
-        like_num = dao.get_like_num(post_id)
-        course_id = post.get('course_id').course_id
+        post = Post.objects.get(post_id=post_id)
+        like_num = PostLike.objects.filter(post_id=post_id).count
+        course_id = post.course_id
 
         user_id = request.user.id
         like_active = dao.like_active(post_id, user_id)
@@ -172,7 +169,7 @@ class PostView(generic.View):
             message ='좋아요'
             like_class = 'like'
 
-        comment_list = dao.select_all_comments(post_id)
+        comment_list = Comment.objects.filter(post_id=post_id)
 
         context = {
             'user_id': user.objects.filter(id=user_id)[0],
@@ -197,7 +194,7 @@ class PostView(generic.View):
             message = request.POST.get('message')
             comment_content = request.POST.get('comment_content')
             comment_action = request.POST.get('comment_action')
-            index = request.POST.get('index')
+
 
             if like == 'like_active':
                 dao.delete_like(post_id, user_id)
@@ -215,17 +212,11 @@ class PostView(generic.View):
             elif comment_action == 'delete':
                 comment_id = int(request.POST.get('comment_id'))
                 Comment.objects.get(comment_id=comment_id).delete()
-                # comment_list = dao.select_all_comments(post_id)
-                # dao.delete_comment(comment_list[int(index)].get('comment_id'), user_id)
 
-            # elif comment_action == 'edit':
-
-
-
-        post = dao.select_post(post_id)
-        course_id = post.get('course_id').course_id
-        like_num = dao.get_like_num(post_id)
-        comment_list = dao.select_all_comments(post_id)
+        post = Post.objects.get(post_id=post_id)
+        course_id = post.course_id
+        like_num = PostLike.objects.filter(post_id=post_id).count
+        comment_list = Comment.objects.filter(post_id=post_id)
 
         context = {
             'user_id': user.objects.filter(id=user_id)[0],
