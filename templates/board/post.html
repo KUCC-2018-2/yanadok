@@ -80,59 +80,229 @@
 
 {% block content %}
     {% include "nav2.html" %}
-    <div id="post_container">
-      {% if post %}
-      <div id="title">
-        <p> {{ post.title }} </p>
-      </div>
-      <div id="post_info">
-        <p id="username"> {{ post.user_id }} </p>
-        <p id="time"> {{ post.upload_time }} </p>
-      </div>
-          <div id="post_content">
-            <p> {{ post.content}} </p>
-          </div>
-          <div id="like_container">
-            <div id="like_btn_wrapper">
-              <a class="{{ like_class }}" id="like_btn" style="width:100px;">{{ message }}</a>
-            <p>좋아요 {{ like_num }}개</p>
-              </div>
-          </div>
-      {% if post.user_id == user %}
-      <div id="post_delete">
-        <a href="{% url 'board:delete_post' post.post_id %}">글 삭제</a>
-      </div>
-      <div id="post_edit">
-        <a href="{% url 'board:edit_post' post.post_id %}">글 수정</a>
-      </div>
-      {% endif %}
-      <div id="post_list">
-        <a href="{% url 'board:board' course_id %}">글목록</a>
-      </div>
-      {% else %}
-        <p>해당 게시글이 존재하지 않습니다.</p>
-        {% endif %}
-    </div>
+
+    <table align="center" cellpadding="0" width="990" style="margin-bottom:3px;">
+        <tbody>
+            <tr>
+                <td width="650" style="padding-left:10px;padding-top:5px;" valign="middle" align="left" height="44">
+                    <a href="zboard.php?id=tiger"
+                        <span style="color:#111;font-size:21px;" class="daum">{{post.post_type}}</span>
+                    </a>
+                    <br>
+                    <span class="sm mbox" style="color:#848688;padding:5px 0;"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <table align="center" border="0" cellspacing="6" cellpadding="6" width="986" style="margin-bottom:10px;background-color:#f2f3f4;border:1px solid rgb(234, 234, 234);">
+        <tbody>
+            <tr>
+                <td valign="top" align="center" width="120">
+                    <img src="{% static "img/hand.png" %}" title="프로필사진" style="max-width:100%;max-height:120px;border-radius:8px;">
+                </td>
+                <td valign="top" align="left" style="line-height:28px;">
+                    <span class="daum" style="color:#333333;font-size:20px;">{{ post.title }}</span><br>
+                    <span style="letter-spacing:0px;color:#1d5e7d;font-weight:bold;font-size:14px;" class="daum">{{ post.user_id }}</span><br>
+                    <span style="font-size:12px;">등록일 : {{ post.upload_time }} </span><span style="font-size:12px;"> | 글번호 : {{post.post_id}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table border="0" cellspacing="0" cellpadding="0" width="986" class="pic_bg" style="table-layout:fixed;">
+        <tbody><tr><td width="100%" align="left" style="padding-top:15px;"></td></tr></tbody>
+    </table>
+
+
+
+    <table align="center" id="bonmoon" border="0" cellspacing="0" cellpadding="0" width="986" class="han_new " style="font-size:15px;padding:20px 18px 10px 18px;letter-spacing:-0.5px;">
+        <tbody>
+            <tr>
+                <td valign="top">{{ post.content }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                    <script type="text/javascript">
+
+                        function update_chu_bbs(kbn,id, no) {
+
+                            var url = "../bbs/bbschuu.php";
+
+                            $.get(url, {kbn:kbn, id:id, no:no}, function(args) {
+
+                                $("#div_chu_bbs").html(args);
+
+                            });
+
+                        }
+                    </script>
+                    <br>
+                    <center>
+                        <span id="div_chu_bbs">
+                            <div id="like_container">
+                                <div id="like_btn_wrapper">
+                                    <a class="{{ like_class }}" id="like_btn" style="width:100px;">{{ message }}</a>
+                                        <p>좋아요 {{ like_num }}개</p>
+                                    </div>
+                            </div>
+                        </span>
+                    </center>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <p>
+
+    </p>
+
+
+
+    <table align="center" width="970" cellspacing="0" cellpadding="5" style="margin-bottom:14px;background-color:#f2f3f4;margin-top:10px;border:solid 1px rgb(222, 227, 235);">
+        <tbody>
+        <tr>
+            <td height="26" width="50%" align="right" style="padding-right:10px;color:#636363;padding-bottom:8px;">
+                {% if post.user_id == user %}
+                <a href="{% url 'board:delete_post' post.post_id %}">글 삭제</a>
+                <span style="font-size:10px;color:#cccccc;">|</span>
+                <a href="{% url 'board:edit_post' post.post_id %}">글 수정</a>
+                <span style="font-size:10px;color:#cccccc;">|</span>
+                {% endif %}
+                <a href="javascript:location.reload()"><span class="style7">새로고침</span></a>
+                <span style="font-size:10px;color:#cccccc;">|</span>
+                <a onfocus="blur()" href="{% url 'board:board' course_id %}"><span class="style7">목록보기</span></a>&nbsp;
+                <span style="font-size:10px;color:#cccccc;">|</span>
+            </td>
+        </tr>
+        </tbody></table>
+
+
+        <div id="color" style="text-align:center;height:24px;"></div>
+
+
+
+        <hr align="center" style="margin-top:12px;margin-bottom:12px;width:970px;border:0;height:1px;background-image:linear-gradient(to right, #eee, #edecec, #eee);">
+
+
+
+
+<!-- 댓글 시작-->
   <div id="comment_container">
     <div id="comment_wrapper">
-        <table id="comment_table">
-  {% for comment in comment_list %}
-    <tr class="each_comment">
-        <td><strong>{{comment.user_id}} :</strong></td>
-        <td> {{comment.comment_content}}</td>
-        <td><small>{{comment.upload_time}}</small></td>
-      {% if comment.user_id == user_id %}
-      <td><button type="submit" class="delete_comment_btn" id={{comment.comment_id}}>댓글 삭제</button></td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-  </table>
+{% for comment in comment_list %}
+<table align="center" border="0" width="970" cellspacing="0" cellpadding="0" style="table-layout:fixed" id="re1" name="re1">
+    <tbody>
+    <tr>
+        <td style="padding:0">
+            <table border="0" width="100%" cellspacing="0" cellpadding="0" class="info_bg" style="table-layout:fixed;">
+                <tbody>
+                <tr valign="top">
+                    <td width="100" align="center" style="padding-top:0px;"><img src="{% static "img/hand_pupple.jpg" %}" style="border-radius:48px;border:0;" width="64"></a></td>
+                    <td width="5"></td>
+                    <td style="padding:1px 0 4px 0px;word-break:break-all" align="left">
+                        <span id="cTitle3172967" style="line-height:200%">
+                            <span class="reply2btn" style="background:#6A84B7;color:#fafafa;border-radius:2px;">
+                                댓글
+                                <b><span class="num">1</span></b>
+                            </span>
+                            <span style="color:#333;font-weight:bold;font-size:12px;">{{comment.user_id}}	 <i class="material-icons" style="color:#333333;font-size:16px;padding-top:0px;"></i></span>
+                            <span class="sm logout">
+                                <span style="color:#999999;">{{comment.upload_time}}</span>
+                                {% if comment.user_id == user_id %}
+                                <button type="submit" class="delete_comment_btn" id={{comment.comment_id}}>댓글 삭제</button>
+                                {% endif %}
 
-        <div id="comment_input_container">
-      <input type="text" name="comment" id="comment_input">
-    <button type="submit" id="submit_comment_btn">댓글 전송</button>
-  </div>
-    </div>
-  </div>
+                            </span>
+
+
+                            <table width="700" cellpadding="0" cellspacing="0" id="cid1">
+                                <tbody>
+                                <tr>
+                                    <td align="left" class="hansb " style="word-break:break-word;padding-top:4px;font-size:15px;">
+                                        {{comment.comment_content}}<br><p>
+                                    </p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </span>
+                    </td>
+                </tr>
+			</tbody>
+            </table>
+		 </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="right">
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr align="center" style="margin-top:12px;margin-bottom:12px;width:970px;border:0;height:1px;background-image:linear-gradient(to right, #eee, #edecec, #eee);">
+{% endfor %}
+<!-- 댓글 끝-->
+
+
+
+<!-- 댓글쓰기 시작-->
+        <table align="center" width="970" cellpadding="0" cellspacing="0" style="border-top:solid 0px #cccccc;background:#fafafa;margin-top:15px;">
+            <tbody>
+            <tr>
+                <td colspan="2" width="100%">
+                    <table border="0" cellspacing="0" cellpadding="0" class="info_bg" width="986" style="table-layout:fixed" id="comment_input_container">
+                        <tbody>
+                        <tr>
+                            <td valign="top" style="padding:2px 1px 0 8px;" width="85" align="center">
+                                <img src="{% static "img/hand_pupple.jpg" %}" width="64" border="0" class="mids" style="border:0;border-radius:48px;">
+                            </td>
+
+                            <td align="right" width="780">
+                                <table border="0" cellspacing="2" cellpadding="0" width="100%" >
+                                    <tbody>
+                                    <tr>
+                                        <td id="re" name="re">
+                                            <textarea name="comment" id="comment_input" cols="20" rows="6" class="textarea roboto " style="font-size:14px;letter-spacing:-0.1px;width:100%;background-color:#fafafa;" editable="0">
+                                            </textarea>
+                                            <div id="output_profile" style="display:inline-block;position:relative;left:0;top:5px;"></div>
+                                        </td>
+                                        <td width="34" align="center" style="padding:1px 0 1px 0;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table border="0" cellspacing="2" cellpadding="0" width="100%">
+                                                <tbody>
+                                                <tr>
+                                                    <td align="left" style="padding-top:8px;"><div id="rcvData"></div></td>
+                                                    <td width="115" style="line-height:19px;"></td>
+                                                    <td width="85" align="right" valign="top">
+                                                        <button type="submit" id="submit_comment_btn">댓글 전송</button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="info_bg" style="height:20px;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+<!-- 댓글쓰기 끝-->
+
+
 
 {% endblock %}
