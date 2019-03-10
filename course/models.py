@@ -9,8 +9,8 @@ class Course(models.Model):
     university = models.CharField(max_length=20)
     campus = models.CharField(max_length=20)
     classification = models.CharField(max_length=20)
-    course_name = models.CharField(max_length=20)
-    professor = models.CharField(max_length=20, blank=True, null=True)
+    course_name = models.CharField(max_length=200)
+    professor = models.CharField(max_length=200, blank=True, null=True)
     credit = models.IntegerField(blank=True, null=True)
     course_times = models.ManyToManyField('CourseTime', through='CourseSpaceTime')
 
@@ -84,7 +84,7 @@ class CourseTime(models.Model):
 class CourseSpaceTime(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     course_time = models.ForeignKey('CourseTime', on_delete=models.CASCADE)
-    classroom = models.CharField(max_length=50)
+    classroom = models.CharField(max_length=50, null=True)
 
     class Meta:
         db_table = 'course_space_time'
