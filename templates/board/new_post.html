@@ -7,7 +7,6 @@
 {% include "nav2.html" %}
 <form method="post" >
     {% csrf_token %}
-
     <div class="col">
         <div class="row justify-content-center">
             <div class="field box-type">
@@ -21,14 +20,14 @@
         <div class="row justify-content-center">
             <div class="field box-title">
                 <label for="id_title" class="label">제목</label>
-                <input type="text" name="title" maxlength="20" id="id_title" class="input">
+                <input type="text" name="title" maxlength="20" id="id_title" class="input" value="{{form.title.value}}">
             </div>
 
         </div>
         <div class="row justify-content-center">
             <div class="field box-content">
                 <label for="id_content" class="label">내용</label>
-                <textarea name="content" cols="40" rows="10" required="" id="id_content" class="input"></textarea>
+                <textarea name="content" cols="40" rows="10" required="" id="id_content" class="input">{{form.content.value}}</textarea>
             </div>
 
         </div>
