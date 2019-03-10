@@ -2,7 +2,7 @@ $(document).ready(() => {
     $('#btn-search').on('click', loadCourses);
     $('#search-result-table').on('click', addCourseToTimetable);
     $('#course-list-table').on('click', deleteCourseFromTimetable);
-    loadTimetable();
+    loadTimetable(renderTimetable);
     loadCourses();
 });
 
@@ -22,18 +22,6 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-function loadTimetable() {
-    fetch('/timetable')
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            throw res.json();})
-        .then((body) => {renderTimetable(body.data)})
-        .catch((e) => {alert(e.data)});
-}
-
 
 function addCourseToTimetable(event) {
     if (!event.target.classList.contains('btn-add')) {
@@ -66,6 +54,18 @@ function addCourseToTimetable(event) {
     event.stopPropagation();
 }
 
+function loadTimetable(callback) {
+    fetch('/timetable')
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            throw res.json();})
+        .then((body) => {callback(body.data)})
+        .catch((e) => {alert(e.data)});
+}
+
+
 function renderTimetable(courses) {
     let table = $('#course-list-table');
     let courseHtmls = courses.map((course) => templateCourseRow(course, "delete"));
@@ -73,8 +73,14 @@ function renderTimetable(courses) {
     colorToTimetable(courses);
 }
 
+function findCellFromTimetable(time) {
+    let course_days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+    let column = course_days.indexOf(time['course_day']) + 2;
+    let row = time['order'] + 1;
+    return $(`#timetable tr:nth-child(${row}) td:nth-child(${column})`);
+}
+
 function colorToTimetable(courses) {
-    $(`#timetable .cell`).attr('class', 'cell');
     courses.forEach((course) => {
         let colorClass = 'color-' + Math.floor(Math.random() * 8);
         course['course_times'].forEach((time) => {
@@ -84,14 +90,6 @@ function colorToTimetable(courses) {
             cell.addClass(colorClass);
         });
     });
-}
-
-
-function findCellFromTimetable(time) {
-    let course_days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
-    let column = course_days.indexOf(time['course_day']) + 2;
-    let row = time['order'] + 1;
-    return $(`#timetable tr:nth-child(${row}) td:nth-child(${column})`);
 }
 
 function deleteCourseFromTimetable(event) {
@@ -109,7 +107,7 @@ function deleteCourseFromTimetable(event) {
         }
     }).then((res) => {
             if (res.ok) {
-                return loadTimetable();
+                return loadTimetable(renderTimetable);
             }
             throw res
         })

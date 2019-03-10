@@ -5,6 +5,12 @@ from timetable.exceptions import DuplicateTimetableException
 from timetable.models import Timetable
 
 
+def get_user_timetable(user):
+    timetable_models = Timetable.objects.filter(user=user).all()\
+        .prefetch_related('course')
+    return [timetable_model.course.to_dict() for timetable_model in timetable_models]
+
+
 @transaction.atomic
 def add_course_to_timetable(user, course_id):
     course = Course.objects.get(pk=course_id)

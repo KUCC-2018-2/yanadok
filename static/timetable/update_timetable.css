@@ -43,3 +43,7 @@ th, td {
 .hd-credit {
     width: 40px;
 }
+
+.search-container {
+    padding: 0 10%;
+}

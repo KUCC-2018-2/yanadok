@@ -4,7 +4,7 @@
 {% endblock %}
 
 
-<nav class="navbar">
+<nav class="navbar bg-primary">
     <div class="nav-logo">
         <a href="/">
             <img src="{% static "img/home.png" %}" width="100%" height="100%"/>
@@ -13,7 +13,7 @@
     <div class="right-area">
         <span class="encourage text-white">야 너도 할수있어 독강</span>
         <div id="logout text-white">
-          <p><a href="{% url 'logout' %}">로그아웃</a></p>
+          <p><a class="text-white" href="{% url 'logout' %}">로그아웃</a></p>
         </div>
     </div>
 </nav>

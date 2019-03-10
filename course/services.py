@@ -1,5 +1,3 @@
-from django.forms import model_to_dict
-
 from course.models import Course
 
 

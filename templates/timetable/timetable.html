@@ -1,230 +1,60 @@
-{% load staticfiles %}
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% extends "base.html" %}
+{% block head %}
+    {% load staticfiles %}
+    {% if user.is_authenticated %}
+    <script src="{% static "timetable/timetable.js" %}"></script>
+    {% endif %}
     <link rel="stylesheet" type="text/css" href="{% static 'timetable/timetable.css' %}?after">
     <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
-    <title>timetable</title>
-  </head>
-  <body>
+    <link rel="stylesheet" type="text/css" href="{% static 'timetable/timetable_color.css' %}">
+    <title>내 시간표</title>
+{% endblock %}
+
+{% block content %}
+    {% include "nav.html" %}
     <div id="wrapper">
-    {% block content %}
     {% csrf_token %}
     {% load filters %}
-    <div id="nav">
-      <div class="wrap">
-        <div id="logo">
-          <p>  logo </p>
-        </div>
-        <div id="logout">
-          <p><a href="{% url 'logout' %}">logout</a></p>
-        </div>
-      </div>
-    </div>
-    <div id="timetable_container">
-      <div class="wrap">
-        <div id="timetable">
-          <table>
-            <tr class="head">
-              <th></th>
-              <td>월</td>
-              <td>화</td>
-              <td>수</td>
-              <td>목</td>
-              <td>금</td>
-              <td id="hours_head"></td>
+<div class="timetable_container bg-primary">
+    <div class="timetable-wrapper row">
+        <table id="timetable">
+            <tr class="table-header">
+                <th></th>
+                <th class="text-center">월</th>
+                <th class="text-center">화</th>
+                <th class="text-center">수</th>
+                <th class="text-center">목</th>
+                <th class="text-center">금</th>
             </tr>
-            <th>
-              <div class="period_long">
-                1교시
-              </div>
-              <div class="period_long">
-                2교시
-              </div>
-              <div class="period_short">
-                3교시
-              </div>
-              <div class="period_short">
-                4교시
-              </div>
-              <div class="period_long">
-                5교시
-              </div>
-              <div class="period_long">
-                6교시
-              </div>
-              <div class="period_short">
-                7교시
-              </div>
-              <div class="period_short last_row">
-                8교시
-              </div>
-            </th>
-
-            <td id="mon">
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '월' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
-                  <form target="" method="post" name="1">
-                {% csrf_token %}
-                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
-                  </form>
-                </div>
-                {% endif %}
+            {% for i in max_classes %}
+            <tr>
+                <td class="timetable-order text-center">{{forloop.counter}}교시</td>
+                {% for j in j|rjust:5 %}
+                    {% if i in long_period_classes %}
+                        <td class="cell period-long text-center"></td>
+                    {% else %}
+                        <td class="cell period-short text-center"></td>
+                    {% endif %}
                 {% endfor %}
-              </div>
-            </td>
-            <td id="tue">
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '화' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
-                  <form target="" method="post" name="1">
-                {% csrf_token %}
-                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
-                  </form>
-                </div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td id="wed">
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '수' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
-                  <form target="" method="post" name="1">
-                {% csrf_token %}
-                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
-                  </form>
-                </div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td id="thu">
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '목' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
-                  <form target="" method="post" name="1">
-                {% csrf_token %}
-                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
-                  </form>
-                </div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td id="fri">
-              <div class="cols">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="last_row"></div>
-              </div>
-              <div class="courses">
-                {% for i in range %}
-                {% if daylist|get_index:forloop.counter0 == '금' %}
-                <div style="top:{{ poslist|get_index:forloop.counter0 }}px; background-color:#c0e6f7; height:{{ arealist|get_index:forloop.counter0 }}px">
-                  <form target="" method="post" name="1">
-                {% csrf_token %}
-                <a href="{% url 'board:board' idlist|get_index:forloop.counter0 %}"class="courses_a" id={{ idlist|get_index:forloop.counter0 }}>{{ namelist|get_index:forloop.counter0 }} <br>
-                {{ proflist|get_index:forloop.counter0 }} {{ dclist|get_index:forloop.counter0 }}</a>
-                  </form>
-                </div>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </td>
-            <td>
-              <div class="cols" id="hours_cols">
-                <div>9시</div>
-                <div>10시</div>
-                <div>11시</div>
-                <div>12시</div>
-                <div>13시</div>
-                <div>14시</div>
-                <div>15시</div>
-                <div>16시</div>
-                <div>17시</div>
-                <div class="last_row">18시</div>
-              </div>
-            </td>
-
-          </table>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="column-time">
+            <div class="cell table-header"></div>
+            <div class="cell time-cell text-center">9시</div>
+            <div class="cell time-cell text-center">10시</div>
+            <div class="cell time-cell text-center">11시</div>
+            <div class="cell time-cell text-center">12시</div>
+            <div class="cell time-cell text-center">1시</div>
+            <div class="cell time-cell text-center">2시</div>
+            <div class="cell time-cell text-center">3시</div>
+            <div class="cell time-cell text-center">4시</div>
+            <div class="cell time-cell text-center">5시</div>
+            <div class="cell time-cell text-center">6시</div>
         </div>
-        <div id="update_timetable">
-          <a href="/update" id="update_timetable_btn">시간표 수정</a>
-        </div>
-      </div>
     </div>
-
-
-
-  {% endblock %}
-        </div>
-  </body>
-
-
-</html>
+    <div id="update-timetable">
+      <a href="/update" id="update-timetable-btn" class="btn bg-accent text-white">시간표 수정</a>
+    </div>
+</div>
+{% endblock %}
