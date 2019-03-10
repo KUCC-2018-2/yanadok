@@ -16,7 +16,7 @@ from django.shortcuts import render
 
 from . import dao
 
-#course = apps.get_model('course', 'Course')
+course = apps.get_model('course', 'Course')
 user = apps.get_model('user', 'User')
 
 
@@ -27,7 +27,7 @@ class BoardView(generic.View):
         user_id = request.user.id
 
         posts = Post.objects.filter(course_id=course_id).order_by('upload_time')
-        course = Course.objects.get(course_id=course_id)
+
         course_idlist = []
 
         notice_posts = dao.select_notice_posts(course_id)
