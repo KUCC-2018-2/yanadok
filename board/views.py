@@ -146,7 +146,7 @@ class DeletePost(generic.View):
         dpost = Post.objects.get(post_id=post_id)
         if dpost.user_id != request.user:
             return HttpResponse('잘못된 접근입니다.')
-        course_id = dpost.course_id.course_id
+        course_id = dpost.course_id
         Comment.objects.filter(post_id=post_id).delete()
         dpost.delete()
         return HttpResponseRedirect(reverse('board:board', args=(course_id,)))
