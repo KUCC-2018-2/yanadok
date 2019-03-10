@@ -17,11 +17,10 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {% if user.is_authenticated %}
-                        <a class="dropdown-item" href="#">Action</a>
+                        {% for course in course_list %}
+                        <a class="dropdown-item" href="{% url 'board:board' course.course_id %}">{{course.course_name}}</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        {% endfor %}
                         {% endif %}
                     </div>
                 </li>

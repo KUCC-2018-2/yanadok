@@ -71,7 +71,7 @@
           <tbody>
           <tr>
               <td width="650" style="padding-left:10px;padding-top:5px;" valign="middle" align="left" height="44">
-                  <a href="zboard.php?id=tiger"><span style="color:#111;font-size:21px;" class="daum">{{course.course_name}}</span> </a> <br><span class="sm mbox" style="color:#848688;padding:5px 0;">{{course.professor}}</span>
+                  <a><span style="color:#111;font-size:21px;" class="daum">{{current_course.course_name}}</span> </a> <br><span class="sm mbox" style="color:#848688;padding:5px 0;">{{current_course.professor}}</span>
               </td>
           </tr>
           </tbody>
@@ -82,7 +82,7 @@
       <form method="post" name="list" action="list_all.php">
 
           <!-- 리스트 시작-->
-          <table align="center" id="revolution_main_table" style="border-top:1px solid rgb(234, 234, 234);border-bottom:0px solid rgb(234, 234, 234);background:#f2f3f4;" cellspacing="0" cellpadding="0" width="986">
+          <table align="center" id="revolution_main_table" style="border-top:1px solid rgb(234, 234, 234);border-bottom:0px solid rgb(234, 234, 234);" cellspacing="0" cellpadding="0" width="986">
               <tbody>
 
 
@@ -98,8 +98,9 @@
                   <td colspan="11" class="line_dark" height="1">
                   </td>
               </tr>
+              <tr><td colspan="11" class="line_separator " height="1"></td></tr>
 
-{% for notice_post in notice_posts %}
+              {% for notice_post in notice_posts %}
               <tr align="center" valign="middle" class="list_notice" onmouseover="this.style.backgroundColor='#f2f2f2'" onmouseout="this.style.backgroundColor=''" height="32" style="word-break: break-all;">
                   <td nowrap="" class="eng sm" align="center"></td><td style="width:6px;border-left:solid 1px #eeeeee;"></td>
                   <td align="left" class="" style="font-size:14px;word-break:break-all;padding:8px 0 7px 9px;">
@@ -118,13 +119,11 @@
 
 
               <tr><td colspan="11" class="notice_separator" height="1"></td></tr>
-
-{% endfor %}
-
+              {% endfor %}
 
 
-{% for post in posts %}
 
+              {% for post in posts %}
               <tr align="center" class="list0 " style="word-break: break-all;" onmouseover="this.style.backgroundColor='#f2f2f2'" onmouseout="this.style.backgroundColor=''" valign="middle">
 
                   <td nowrap="" class="roboto" align="center" style="font-size:12px;padding-top:2px;-webkit-appearance:none;height:34px;"><span style="font-weight:bold;color:#e98e05"></span></td>
@@ -143,10 +142,8 @@
                   <td nowrap="" class="eng sm" style="border-left:solid 1px #eeeeee;">{{post.upload_time}}</td>
               </tr>
 
-
               <tr><td colspan="11" class="line_separator" height="1"></td></tr>
-
-  {% endfor %}
+              {% endfor %}
               </tbody>
           </table>
           <!-- 리스트 끝-->
@@ -165,7 +162,7 @@
               <tbody>
               <tr><td align="center" valign="top" width="660" style="letter-spacing:3px;font-size:12px;" class="nanum-g">
                   ◁   <span style="font-size:11px;color:#a03636;font-weight:bold;">1</span>   ▷</td>
-                  <td align="right" style="padding-right:10px;" width="120"><a href = 'new_post'><span class="reebtn">글쓰기</span></a><span class="rebtn"></span></td>
+                  <td align="right" style="padding-right:10px;" width="120"><a href = 'new_post'><span class="reebtn btn bg-accent text-white">글쓰기</span></a><span class="rebtn"></span></td>
               </tr>
               </tbody>
           </table>

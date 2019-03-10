@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import generic
 
 from course.models import Course
+from timetable.models import Timetable
 from .models import Post, Comment, PostLike
 from django.apps import apps
 from .forms import PostForm
@@ -23,6 +24,10 @@ user = apps.get_model('user', 'User')
 class BoardView(generic.View):
 
     def get(self, request, course_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
+
         template = loader.get_template('board/board.html')
         user_id = request.user.id
 
@@ -31,18 +36,22 @@ class BoardView(generic.View):
         course_idlist = []
 
         notice_posts = dao.select_notice_posts(course_id)
-
+        current_course = Course.objects.get(course_id=course_id)
         context = {
             'course_id': course_id,
-            'course': course,
+            'current_course': current_course,
             'posts': posts,
             'notice_posts': notice_posts,
             'course_idlist': course_idlist,
+            'course_list': course_list,
         }
 
         return HttpResponse(template.render(context, request))
 
     def post(self, request, course_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = loader.get_template('board/board.html')
         userId = request.user.id
 
@@ -69,6 +78,7 @@ class BoardView(generic.View):
 
         courselist = dao.get_courselist(userId)
         course_idlist = []
+        current_course = Course.objects.get(course_id=course_id)
 
         for course in courselist:
             course_idlist.append(course['course_id'])
@@ -77,12 +87,14 @@ class BoardView(generic.View):
 
         context = {
             'course_id': course_id,
+            'current_course': current_course,
             'course_name': course_name,
             'posts': posts,
             'notice_posts': notice_posts,
             'courselist': courselist,
             'course_idlist': course_idlist,
             'post_type': post_type,
+            'course_list': course_list,
         }
 
         return HttpResponse(template.render(context, request))
@@ -95,11 +107,17 @@ def boardRedirection(request):
 class NewPost(generic.View):
 
     def get(self, request, course_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = 'board/new_post.html'
         form = PostForm()
-        return render(request, template, {'form': form, })
+        return render(request, template, {'form': form, 'course_list': course_list, })
 
     def post(self, request, course_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = 'board/new_post.html'
         form = PostForm(request.POST or None)
         if form.is_valid():
@@ -110,20 +128,26 @@ class NewPost(generic.View):
             return redirect('board:board', course_id)
         else:
             form = PostForm()
-        return render(request, template, {'form': form, })
+        return render(request, template, {'form': form, 'course_list': course_list, })
 
 
 class EditPost(generic.View):
 
     def get(self, request, post_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = 'board/new_post.html'
         posting = Post.objects.get(post_id=post_id)
         if posting.user_id != request.user:
             return HttpResponse('잘못된 접근입니다.')
         form = PostForm(instance=posting)
-        return render(request, template, {'form': form, })
+        return render(request, template, {'form': form, 'course_list': course_list, })
 
     def post(self, request, post_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = 'board/new_post.html'
         posting = Post.objects.get(post_id=post_id)
         course_id = posting.course_id
@@ -136,7 +160,7 @@ class EditPost(generic.View):
             return redirect('board:post', post_id)
         else:
             form = PostForm(instance=posting)
-        return render(request, template, {'form': form, })
+        return render(request, template, {'form': form, 'course_list': course_list, })
 
 
 class DeletePost(generic.View):
@@ -153,6 +177,9 @@ class DeletePost(generic.View):
 
 class PostView(generic.View):
     def get(self, request, post_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = loader.get_template('board/post.html')
 
         post = Post.objects.get(post_id=post_id)
@@ -178,11 +205,15 @@ class PostView(generic.View):
             'like_class': like_class,
             'course_id': course_id,
             'comment_list': comment_list,
+            'course_list': course_list,
         }
 
         return HttpResponse(template.render(context, request))
 
     def post(self, request, post_id):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = loader.get_template('board/post.html')
         message = ''
         like_class = ''
@@ -225,6 +256,7 @@ class PostView(generic.View):
             'like_class': like_class,
             'course_id': course_id,
             'comment_list': comment_list,
+            'course_list': course_list,
         }
 
         return HttpResponse(template.render(context, request))

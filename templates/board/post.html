@@ -207,7 +207,7 @@
                             <span class="sm logout">
                                 <span style="color:#999999;">{{comment.upload_time}}</span>
                                 {% if comment.user_id == user_id %}
-                                <button type="submit" class="delete_comment_btn btn" id={{comment.comment_id}}>댓글 삭제</button>
+                                <button type="submit" class="delete_comment_btn btn" id={{comment.comment_id}} style="font-size:10px;color:#e0210b" >댓글 삭제</button>
                                 {% endif %}
 
                             </span>
@@ -253,6 +253,8 @@
                         <tr>
                             <td valign="top" style="padding:2px 1px 0 8px;" width="85" align="center">
                                 <img src="{% static "img/hand_pupple.jpg" %}" width="64" border="0" class="mids" style="border:0;border-radius:48px;">
+                                <br>
+                                <a>{{user}}</a>
                             </td>
 
                             <td align="right" width="780">
@@ -260,7 +262,7 @@
                                     <tbody>
                                     <tr>
                                         <td id="re" name="re">
-                                            <textarea name="comment" id="comment_input" cols="20" rows="6" class="textarea roboto " style="font-size:14px;letter-spacing:-0.1px;width:100%;background-color:#fafafa;" editable="0">
+                                            <textarea name="comment" id="comment_input" cols="20" rows="6" class="textarea roboto" style="font-size:14px;letter-spacing:-0.1px;width:100%;background-color:#fafafa;" editable="0">
                                             </textarea>
                                             <div id="output_profile" style="display:inline-block;position:relative;left:0;top:5px;"></div>
                                         </td>
