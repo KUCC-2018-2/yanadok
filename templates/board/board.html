@@ -89,7 +89,8 @@
 
 
               <tr align="center" valign="middle" style="height:22px;">
-                  <td class="list_tspace" width="48"><nobr><span class="title_text"></span></a></nobr></td><td></td>
+
+                  <td class="list_tspace" width="48"><nobr><span class="title_text">분류</span></nobr></td><td></td>
                   <td class="list_tspace" align="left" style="padding-left:0px;"><span class="title_text">제목</span></td>
                   <td class="list_tspace" align="right" width="130" style="padding-right:10px;"><span class="title_text">글쓴이</span></a></td>
                   <td class="list_tspace" width="64"><nobr><span class="title_text">등록일</span></a></nobr></td>
@@ -126,7 +127,7 @@
               {% for post in posts %}
               <tr align="center" class="list0 " style="word-break: break-all;" onmouseover="this.style.backgroundColor='#f2f2f2'" onmouseout="this.style.backgroundColor=''" valign="middle">
 
-                  <td nowrap="" class="roboto" align="center" style="font-size:12px;padding-top:2px;-webkit-appearance:none;height:34px;"><span style="font-weight:bold;color:#e98e05"></span></td>
+                  <td nowrap="" class="roboto" align="center" style="font-size:12px;padding-top:2px;-webkit-appearance:none;height:34px;"><span style="font-weight:bold;color:#8578d2">{{post.post_type}}</span></td>
 
                   <td style="width:6px;border-left:solid 1px #eee"></td>
 
