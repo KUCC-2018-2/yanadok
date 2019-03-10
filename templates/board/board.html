@@ -1,21 +1,9 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
 {% load staticfiles %}
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
-    <title></title>
-  </head>
-  <body>
-
-  {% load filters %}
-  {% load el_pagination_tags %}
-
-  <div id="wrapper">
-       {% block content %}
-    {% csrf_token %}
-  {% if user.is_authenticated %}
-  {% load filters %}
+      {% load filters %}
       <script>
       $(document).ready(function(){
       $(document).on('click', '.board_tab_a', function(){
@@ -61,104 +49,151 @@
     })
   });
     </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'board/board.css' %}?after">
+{% endblock %}
 
-    <div id="nav">
-      <div class="wrap">
-        <div id="logo">
-          <p>  logo </p>
-        </div>
-        <div id="logout">
-          <p><a href="{% url 'logout' %}">logout</a></p>
-        </div>
-      </div>
-    </div>
-    <div id="board_container">
-        <div id="board_nav">
-        <div class="dropdown_container">
-          <button class="dropbtn">강의 메뉴</button>
-          <div class="dropdown-content">
-              {% for course in courselist %}
-            <a href="{% url 'board:board' course_idlist|get_index:forloop.counter0 %}" class="course_a">{{ course.course_name }}</a>
-              {% endfor %}
-          </div>
-        </div>
-            <div>
-                <p>{{ course_name }}</p>
-            </div>
-        <div id="board_tab_container">
-          <ul id="board_tab_ul">
-            <li class="board_tab_li current-tab">
-              <a class="board_tab_a active_tab" href="" id="전체">전체</a>
-            </li>
-            <li class="board_tab_li">
-                  <a class="board_tab_a" id="스터디팀플">스터디/팀플</a>
-            </li>
-          </ul>
-        </div>
-        </div>
-        <div id="post_list_container">
-            <table id="post_list_table">
-              <tr class="head">
-                <td>글번호</td>
-                <td>제목</td>
-                <td>작성자</td>
-                <td>작성시간</td>
+
+
+{% block content %}
+    {% include "nav2.html" %}
+
+  {% load filters %}
+  {% load el_pagination_tags %}
+
+  <div id="wrapper">
+      <br>
+      <br>
+      <br>
+      <br>
+
+      <!--제목-->
+      <table align="center" cellpadding="0" width="990" style="margin-bottom:3px;">
+          <tbody>
+          <tr>
+              <td width="650" style="padding-left:10px;padding-top:5px;" valign="middle" align="left" height="44">
+                  <a href="zboard.php?id=tiger"><span style="color:#111;font-size:21px;" class="daum">{{course.course_name}}</span> </a> <br><span class="sm mbox" style="color:#848688;padding:5px 0;">{{course.professor}}</span>
+              </td>
+          </tr>
+          </tbody>
+      </table>
+      <!--제목 끝-->
+
+
+      <form method="post" name="list" action="list_all.php">
+
+          <!-- 리스트 시작-->
+          <table align="center" id="revolution_main_table" style="border-top:1px solid rgb(234, 234, 234);border-bottom:0px solid rgb(234, 234, 234);background:#f2f3f4;" cellspacing="0" cellpadding="0" width="986">
+              <tbody>
+
+
+
+
+              <tr align="center" valign="middle" style="height:22px;">
+                  <td class="list_tspace" width="48"><nobr><span class="title_text"></span></a></nobr></td><td></td>
+                  <td class="list_tspace" align="left" style="padding-left:0px;"><span class="title_text">제목</span></td>
+                  <td class="list_tspace" align="right" width="130" style="padding-right:10px;"><span class="title_text">글쓴이</span></a></td>
+                  <td class="list_tspace" width="64"><nobr><span class="title_text">등록일</span></a></nobr></td>
               </tr>
-                {% for notice in notice_posts %}
-              <tr class="rows">
-                <td><p>공지</p></td>
-                <td>
-                    <form target="" method="post" name="1">
-                {% csrf_token %}
-                <a href="{% url 'board:post' post.post_id %}"class="post_a">{{ notice.title }}</a>
-                </form>
-                </td>
-                  <td>{{ notice.user_id }}</td>
-                <td>{{ notice.upload_time }}</td>
+              <tr>
+                  <td colspan="11" class="line_dark" height="1">
+                  </td>
               </tr>
-                {% endfor %}
 
-                {% paginate posts %}
-                {% for post in posts %}
-              <tr class="rows">
-                <td>{{ post.post_id }}</td>
-                <td>
-                    <form target="" method="post" name="1">
-                {% csrf_token %}
-                <a href="{% url 'board:post' post.post_id %}"class="post_a">{{ post.title }}</a>
-                </form>
-                </td>
-                  <td>{{ post.user_id }}</td>
-                <td>{{ post.upload_time }}</td>
+{% for notice_post in notice_posts %}
+              <tr align="center" valign="middle" class="list_notice" onmouseover="this.style.backgroundColor='#f2f2f2'" onmouseout="this.style.backgroundColor=''" height="32" style="word-break: break-all;">
+                  <td nowrap="" class="eng sm" align="center"></td><td style="width:6px;border-left:solid 1px #eeeeee;"></td>
+                  <td align="left" class="" style="font-size:14px;word-break:break-all;padding:8px 0 7px 9px;">
+                      <a href="view.php?id=tiger&amp;page=1&amp;sn1=&amp;divpage=57&amp;sn=off&amp;ss=on&amp;sc=on&amp;select_arrange=headnum&amp;desc=asc&amp;no=305478">{{notice_post.title}}</a>
+                  </td>
+                  <td width="120" style="display:block;line-height:34px;width:120px;font-size:12px;white-space:nowrap;text-align:right;overflow:hidden;text-overflow:ellipsis;" class="nanum-g">
+                      <div style="text-align:right;width:120px;overflow:hidden;text-overflow:ellipsis" class="list_name"><nobr>
+                          <span style="font-weight:bold;">
+                              운영자
+                          </span>
+                      </nobr>
+                      </div>
+                  </td>
+                  <td nowrap="" class="eng sm" style="border-left:solid 1px #eeeeee;"><nobr>공지</nobr></td>
               </tr>
-                {% endfor %}
-            </table>
-            <div>
-                <a href = 'new_post'>글쓰기</a>
-            </div>
-        </div>
 
-        <div id="pagination_container">
-            <div id="pagination">
-                {% get_pages %}
-                {{ pages|length }}
-                {% if pages.paginated %}
-                {{ pages.get_rendered }}
-                {% endif %}
-          </div>
-        </div>
 
-        <div id="search_container">
-          <input type="text" name="검색어 입력" id="search_input" placeholder="글제목으로 검색">
-          <input type="submit" value="검색" id="search_btn">
-        </div>
-    </div>
-        {% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">login</a> |
-    <a href="{% url 'user:signup' %}">signup</a>
-  {% endif %}
-    {% endblock %}
-        </div>
-  </body>
-</html>
+              <tr><td colspan="11" class="notice_separator" height="1"></td></tr>
+
+{% endfor %}
+
+
+
+{% for post in posts %}
+
+              <tr align="center" class="list0 " style="word-break: break-all;" onmouseover="this.style.backgroundColor='#f2f2f2'" onmouseout="this.style.backgroundColor=''" valign="middle">
+
+                  <td nowrap="" class="roboto" align="center" style="font-size:12px;padding-top:2px;-webkit-appearance:none;height:34px;"><span style="font-weight:bold;color:#e98e05"></span></td>
+
+                  <td style="width:6px;border-left:solid 1px #eee"></td>
+
+                  <td align="left" style="padding:4px 0 0px 8px;font-size:14px;letter-spacing:-0.5px;">
+
+                      <a href="{% url 'board:post' post.post_id %}"><span class="list_title">{{post.title}}</span></a>&nbsp;
+                  </td>
+
+                  <td width="130" style="display:block;line-height:37px;width:130px;font-size:13px;white-space:nowrap;text-align:right;overflow:hidden;text-overflow:ellipsis;padding-right:10px;" class="nanum-g">
+                      <span style="font-weight:bold;">{{post.user_id}}</span>
+                  </td>
+
+                  <td nowrap="" class="eng sm" style="border-left:solid 1px #eeeeee;">{{post.upload_time}}</td>
+              </tr>
+
+
+              <tr><td colspan="11" class="line_separator" height="1"></td></tr>
+
+  {% endfor %}
+              </tbody>
+          </table>
+          <!-- 리스트 끝-->
+
+
+          <table border="0" cellpadding="0" cellspacing="0" width="986" class="info_bg">
+              <tbody>
+              <tr>
+                  <td class="line_dark" style="height:1px"></td>
+              </tr>
+              </tbody>
+          </table>
+
+
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="986" style="margin-top:10px;">
+              <tbody>
+              <tr><td align="center" valign="top" width="660" style="letter-spacing:3px;font-size:12px;" class="nanum-g">
+                  ◁   <span style="font-size:11px;color:#a03636;font-weight:bold;">1</span>   ▷</td>
+                  <td align="right" style="padding-right:10px;" width="120"><a href = 'new_post'><span class="reebtn">글쓰기</span></a><span class="rebtn"></span></td>
+              </tr>
+              </tbody>
+          </table>
+
+
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="986" class="info_bg">
+              <tbody>
+              <tr><td style="height:14px"></td></tr>
+              <tr>
+                  <td align="center" colspan="2" style="padding-top:8px;border-top:0px solid #eeeeee;">
+                      <table border="0" cellspacing="0" cellpadding="0">
+                          <tbody>
+                          <tr>
+                              <td>
+                                  <input type="text" name="tagkeyword" value="" size="25" class="input" placeholder="검색">
+                              </td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+
+          <table border="0" cellpadding="0" cellspacing="0" width="988">
+              <tbody><tr class="info_bg"><td colspan="2" height="5"></td></tr>
+              <tr><td height="10"></td></tr>
+              </tbody></table>
+      </form>
+
+{% endblock %}

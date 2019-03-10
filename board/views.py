@@ -16,7 +16,7 @@ from django.shortcuts import render
 
 from . import dao
 
-course = apps.get_model('course', 'Course')
+#course = apps.get_model('course', 'Course')
 user = apps.get_model('user', 'User')
 
 
@@ -26,16 +26,15 @@ class BoardView(generic.View):
         template = loader.get_template('board/board.html')
         user_id = request.user.id
 
-        posts = Post.objects.filter(course_id=course_id)
-        course_name = Course.objects.get(course_id=course_id).course_name
+        posts = Post.objects.filter(course_id=course_id).order_by('upload_time')
+        course = Course.objects.get(course_id=course_id)
         course_idlist = []
-
 
         notice_posts = dao.select_notice_posts(course_id)
 
         context = {
             'course_id': course_id,
-            'course_name': course_name,
+            'course': course,
             'posts': posts,
             'notice_posts': notice_posts,
             'course_idlist': course_idlist,
