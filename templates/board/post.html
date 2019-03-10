@@ -99,7 +99,7 @@
     </table>
 
 
-    <table align="center" border="0" cellspacing="6" cellpadding="6" width="986" style="margin-bottom:10px;background-color:#f2f3f4;border:1px solid rgb(234, 234, 234);">
+    <table align="center" border="0" cellspacing="6" cellpadding="6" width="986" style="margin-bottom:10px;border:1px solid rgb(234, 234, 234);">
         <tbody>
             <tr>
                 <td valign="top" align="center" width="120">
@@ -107,8 +107,8 @@
                 </td>
                 <td valign="top" align="left" style="line-height:28px;">
                     <span class="daum" style="color:#333333;font-size:20px;">{{ post.title }}</span><br>
-                    <span style="letter-spacing:0px;color:#1d5e7d;font-weight:bold;font-size:14px;" class="daum">{{ post.user_id }}</span><br>
-                    <span style="font-size:12px;">등록일 : {{ post.upload_time }} </span><span style="font-size:12px;"> | 글번호 : {{post.post_id}}</span>
+                    <span style="letter-spacing:0px;color:#8578d2;font-weight:bold;font-size:14px;" class="daum">{{ post.user_id }}</span><br>
+                    <span style="font-size:12px;">{{ post.upload_time }} </span>
                 </td>
             </tr>
         </tbody>
@@ -144,41 +144,36 @@
                     </script>
                     <br>
                     <center>
-                        <span id="div_chu_bbs">
-                            <div id="like_container">
-                                <div id="like_btn_wrapper">
-                                    <a class="{{ like_class }}" id="like_btn" style="width:100px;">{{ message }}</a>
-                                        <p>좋아요 {{ like_num }}개</p>
-                                    </div>
-                            </div>
-                        </span>
+
                     </center>
                 </td>
             </tr>
         </tbody>
     </table>
-    <br>
-    <br>
+
     <p>
 
     </p>
-
-
-
-    <table align="center" width="970" cellspacing="0" cellpadding="5" style="margin-bottom:14px;background-color:#f2f3f4;margin-top:10px;border:solid 1px rgb(222, 227, 235);">
+    <table align="center" width="970" cellspacing="0" cellpadding="5" style="margin-bottom:14px;margin-top:10px;">
         <tbody>
         <tr>
+            <td height="26" width="50%" align="left">
+                 <span id="div_chu_bbs">
+                     <div id="like_container">
+                         <div id="like_btn_wrapper">
+                             <a class="{{ like_class }}" id="like_btn">좋아요 {{ like_num }}</a>
+
+                         </div>
+                     </div>
+                 </span>
+            </td>
             <td height="26" width="50%" align="right" style="padding-right:10px;color:#636363;padding-bottom:8px;">
                 {% if post.user_id == user %}
-                <a href="{% url 'board:delete_post' post.post_id %}">글 삭제</a>
-                <span style="font-size:10px;color:#cccccc;">|</span>
-                <a href="{% url 'board:edit_post' post.post_id %}">글 수정</a>
-                <span style="font-size:10px;color:#cccccc;">|</span>
+                <a href="{% url 'board:delete_post' post.post_id %}" class="btn bg-accent text-white">글 삭제</a>
+                <a href="{% url 'board:edit_post' post.post_id %}" class="btn bg-accent text-white">글 수정</a>
                 {% endif %}
-                <a href="javascript:location.reload()"><span class="style7">새로고침</span></a>
-                <span style="font-size:10px;color:#cccccc;">|</span>
-                <a onfocus="blur()" href="{% url 'board:board' course_id %}"><span class="style7">목록보기</span></a>&nbsp;
-                <span style="font-size:10px;color:#cccccc;">|</span>
+                <a href="javascript:location.reload()"><span class="style7 btn bg-accent text-white">새로고침</span></a>
+                <a onfocus="blur()" href="{% url 'board:board' course_id %}"><span class="style7 btn bg-accent text-white">목록보기</span></a>&nbsp;
             </td>
         </tr>
         </tbody></table>
@@ -208,11 +203,11 @@
                     <td width="5"></td>
                     <td style="padding:1px 0 4px 0px;word-break:break-all" align="left">
                         <span id="cTitle3172967" style="line-height:200%">
-                            <span style="color:#333;font-weight:bold;font-size:12px;">{{comment.user_id}}	 <i class="material-icons" style="color:#333333;font-size:16px;padding-top:0px;"></i></span>
+                            <span style="color:#333;font-weight:bold;font-size:12px;">{{comment.user_id}}</span>
                             <span class="sm logout">
                                 <span style="color:#999999;">{{comment.upload_time}}</span>
                                 {% if comment.user_id == user_id %}
-                                <button type="submit" class="delete_comment_btn" id={{comment.comment_id}}>댓글 삭제</button>
+                                <button type="submit" class="delete_comment_btn btn" id={{comment.comment_id}}>댓글 삭제</button>
                                 {% endif %}
 
                             </span>
@@ -279,7 +274,7 @@
                                                     <td align="left" style="padding-top:8px;"><div id="rcvData"></div></td>
                                                     <td width="115" style="line-height:19px;"></td>
                                                     <td width="85" align="right" valign="top">
-                                                        <button type="submit" id="submit_comment_btn">댓글 전송</button>
+                                                        <button type="submit" id="submit_comment_btn" class="btn bg-accent text-white" style="width: 120px">댓글 전송</button>
                                                     </td>
                                                 </tr>
                                                 </tbody>

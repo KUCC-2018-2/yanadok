@@ -162,10 +162,10 @@ class PostView(generic.View):
         user_id = request.user.id
         like_active = dao.like_active(post_id, user_id)
         if like_active == True:
-            message = '좋아요 취소'
+            message = 'unlike'
             like_class = 'like_active'
         else:
-            message ='좋아요'
+            message = 'like'
             like_class = 'like'
 
         comment_list = Comment.objects.filter(post_id=post_id)
