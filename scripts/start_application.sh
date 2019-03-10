@@ -1,0 +1,1 @@
+gunicorn -c gunicorn.py yanadok.wsgi:application
