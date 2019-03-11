@@ -3,3 +3,4 @@ django-el-pagination==3.2.4
 mysqlclient==1.4.2
 pytz==2018.7
 gunicorn==19.9.0
+openpyxl==2.6.1
