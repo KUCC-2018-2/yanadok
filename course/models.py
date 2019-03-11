@@ -17,9 +17,13 @@ class Course(models.Model):
     def is_overlapped(self, course):
         target = course.course_times.all()
         for time in self.course_times.all():
-            if time in target:
-                return True
+            for target_time in target:
+                if self.__is_same_time(time, target_time):
+                    return True
         return False
+
+    def __is_same_time(self, time, target):
+        return time.order == target.order and time.course_day == target.course_day
 
     def to_dict(self):
         result = model_to_dict(self)
