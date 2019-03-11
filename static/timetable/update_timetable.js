@@ -81,8 +81,8 @@ function findCellFromTimetable(time) {
 }
 
 function colorToTimetable(courses) {
-    courses.forEach((course) => {
-        let colorClass = 'color-' + Math.floor(Math.random() * 8);
+    courses.forEach((course, index) => {
+        let colorClass = 'color-' + index;
         course['course_times'].forEach((time) => {
             let cell = findCellFromTimetable(time);
             cell.removeClass();
@@ -107,6 +107,7 @@ function deleteCourseFromTimetable(event) {
         }
     }).then((res) => {
             if (res.ok) {
+                removeColorFromTimetable();
                 return loadTimetable(renderTimetable);
             }
             throw res
@@ -114,7 +115,12 @@ function deleteCourseFromTimetable(event) {
       .catch((res) => {
           handleError(res)
       });
+}
 
+function removeColorFromTimetable() {
+    let cells = $('td.cell');
+    cells.removeClass();
+    cells.addClass('cell');
 }
 
 function loadCourses() {
