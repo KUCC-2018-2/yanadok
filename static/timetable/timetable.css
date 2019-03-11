@@ -46,6 +46,10 @@ th {
     background-color: white;
     width: 80px;
     padding: 0;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #update-timetable {

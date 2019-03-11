@@ -19,16 +19,16 @@
     <div class="timetable-wrapper row">
         <table id="timetable">
             <tr class="table-header">
-                <th></th>
-                <th class="text-center">월</th>
-                <th class="text-center">화</th>
-                <th class="text-center">수</th>
-                <th class="text-center">목</th>
-                <th class="text-center">금</th>
+                <th class="cell"></th>
+                <th class="cell text-center">월</th>
+                <th class="cell text-center">화</th>
+                <th class="cell text-center">수</th>
+                <th class="cell text-center">목</th>
+                <th class="cell text-center">금</th>
             </tr>
             {% for i in max_classes %}
             <tr>
-                <td class="timetable-order text-center">{{forloop.counter}}교시</td>
+                <td class="cell timetable-order text-center">{{forloop.counter}}교시</td>
                 {% for j in j|rjust:5 %}
                     {% if i in long_period_classes %}
                         <td class="cell period-long text-center"></td>
