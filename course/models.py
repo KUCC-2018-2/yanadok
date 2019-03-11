@@ -27,9 +27,12 @@ class Course(models.Model):
         date_classrooms = []
         for time in result['course_times']:
             course_times.append(model_to_dict(time))
-            date_classrooms.append({'day': time.get_course_day_display(),
-                                    'order': time.order,
-                                    'classroom': time.coursespacetime_set.get(course=self).classroom})
+            try:
+                date_classrooms.append({'day': time.get_course_day_display(),
+                                        'order': time.order,
+                                        'classroom': time.coursespacetime_set.get(course=self).classroom})
+            except:
+                pass
         result['course_times'] = course_times
         result['date_classroom'] = self.__generate_date_classroom_str(date_classrooms)
         return result
