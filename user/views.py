@@ -23,7 +23,6 @@ def signup(request):
         try:
             check_invalid_signup_request(body)
             user = User.from_registration_info(body)
-            send_registration_email(request, user)
             user.save()
             return redirect('login')
         except (DuplicateUserException, BadRequestException, InvalidArgumentException) as e:
