@@ -4,8 +4,9 @@ from django.template import loader
 from django.urls import reverse
 from django.views import generic
 
-from course.models import CourseTime
+from course.models import CourseTime, Course
 from timetable import dao
+from timetable.models import Timetable
 from timetable.services import get_user_timetable
 
 
@@ -126,11 +127,15 @@ class TimetableView(generic.View):
         if request.user.is_authenticated:
             template = loader.get_template('timetable/timetable.html')
             timetable = get_user_timetable(request.user)
+            course_list = []
+            for lecture in Timetable.objects.filter(user_id=request.user.id):
+                course_list.append(Course.objects.get(course_id=lecture.course.course_id))
             context = {
                 'long_period_classes': [1, 2, 5, 6],
                 'max_classes': range(1, 9),
                 'day_names': TimetableView.day_names,
-                'timetable': timetable
+                'timetable': timetable,
+                'course_list': course_list,
             }
             return HttpResponse(template.render(context, request))
         else:
@@ -152,5 +157,8 @@ class TimetableView(generic.View):
 # 시간표 수정
 class UpdateTimetableView(generic.View):
     def get(self, request):
+        course_list = []
+        for lecture in Timetable.objects.filter(user_id=request.user.id):
+            course_list.append(Course.objects.get(course_id=lecture.course.course_id))
         template = loader.get_template('timetable/update_timetable.html')
-        return HttpResponse(template.render({}, request))
+        return HttpResponse(template.render({'course_list': course_list, }, request))
